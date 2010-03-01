@@ -22,6 +22,8 @@ class readonly::common {
     ensure => "/proc/mounts"
   }
 
+  readonly::mount_tmpfs { "/var/lib/urandom": }
+
 }
 
 # DEPRECATED replaced by puppet management of /var/log.model
