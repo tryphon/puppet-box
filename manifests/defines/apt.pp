@@ -2,12 +2,19 @@
 define apt::key($ensure = present, $source) {
   case $ensure {
     present: {
-      exec { "cat '$source' | /usr/bin/apt-key add -":
-        unless => "apt-key list | grep -Fqe '${name}'"
+      file { "/etc/apt/${name}.key":
+        source => $source
+      }
+      exec { "/usr/bin/apt-key add /etc/apt/${name}.key":
+        unless => "apt-key list | grep -Fqe '${name}'",
+        require => File["/etc/apt/${name}.key"]
       }
     }
     
     absent: {
+      file { "/etc/apt/${name}.key":
+        ensure => absent
+      }
       exec {"/usr/bin/apt-key del ${name}":
         onlyif => "apt-key list | grep -Fqe '${name}'",
       }
@@ -19,11 +26,14 @@ define apt::source($key) {
   apt::key { $key:
     source => "puppet:///box/apt/$name.key"
   }
-  # copy and launch apt-get update in the same operation
-  exec { "apt-source-copy-$name":
-    command => "cat puppet:///box/apt/$name.list > /etc/apt/sources.list.d/$name.list && apt-get update",
+  file { "/etc/apt/sources.list.d/$name.list":
+    source => "puppet:///box/apt/$name.list",
     require => Apt::Key[$key],
-    creates => "/etc/apt/sources.list.d/$name.list"
+    notify => Exec["apt-get-update-for-source-${name}"]
+  } 
+  exec { "apt-get-update-for-source-${name}":
+    command => "apt-get update",
+    refreshonly => true
   }
 }
 
