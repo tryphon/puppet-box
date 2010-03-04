@@ -31,7 +31,7 @@ define concatenated_file (
 	} else {
 		file {
 			$dir_real:
-				source => "$source_base/files/common/empty",
+				source => "puppet:///box/common/empty",
 				checksum => mtime,
 				ignore => '.gitignore',
 				recurse => true, purge => true, force => true,

@@ -18,11 +18,11 @@ class network::dhcp::readonly {
   include readonly::common
 
   file { "/etc/dhcp3/dhclient.conf":
-    source => "$source_base/files/dhcp3/dhclient.conf", 
+    source => "puppet:///box/dhcp3/dhclient.conf", 
     require => Package["dhcp3-client"] 
   } 
   file { "/etc/dhcp3/dhclient-script":
-    source => "$source_base/files/dhcp3/dhclient-script", 
+    source => "puppet:///box/dhcp3/dhclient-script", 
     require => Package["dhcp3-client"] 
   } 
 
@@ -63,6 +63,6 @@ class network::interfaces {
 # DEPRECATED : network/interfaces is now managed by puppet bot
 class network::interfaces::deprecated {
   file { "/etc/network/interfaces":
-    source => "$source_base/files/network/interfaces"
+    source => "puppet:///box/network/interfaces"
   }
 }

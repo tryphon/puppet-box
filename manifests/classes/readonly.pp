@@ -30,7 +30,7 @@ class readonly::common {
 class readonly::initvarlog {
 
   file { "/etc/init.d/varlog":
-    source => "$source_base/files/readonly/varlog.initd",
+    source => "puppet:///box/readonly/varlog.initd",
     mode => 775
   }
 

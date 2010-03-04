@@ -17,11 +17,11 @@ define apt::key($ensure = present, $source) {
 
 define apt::source($key) {
   apt::key { $key:
-    source => "$source_base/files/apt/$name.key"
+    source => "puppet:///box/apt/$name.key"
   }
   # copy and launch apt-get update in the same operation
   exec { "apt-source-copy-$name":
-    command => "cat $source_base/files/apt/$name.list > /etc/apt/sources.list.d/$name.list && apt-get update",
+    command => "cat puppet:///box/apt/$name.list > /etc/apt/sources.list.d/$name.list && apt-get update",
     require => Apt::Key[$key],
     creates => "/etc/apt/sources.list.d/$name.list"
   }
