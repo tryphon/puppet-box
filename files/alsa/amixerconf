@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Try to find the best way to enable capture from line
+
+amixer controls | grep -q 'Input Source'
+if [  $? == 0 ]; then
+    # Looks like a Realtek ALC887 mixer
+    # no capture switch on Line but an "Input Source" control
+    amixer -- sset 'Input Source' 'Line'
+    amixer -- sset 'Capture' -3dB
+else
+    amixer -- sset 'Line' cap
+fi
