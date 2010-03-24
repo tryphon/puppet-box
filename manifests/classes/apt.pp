@@ -25,3 +25,9 @@ class apt::backport {
     key => "16BA136C"
   }
 }
+
+class apt::multimedia {
+  apt::source { debian-multimedia: 
+    key => "1F41B907"
+  }
+}
