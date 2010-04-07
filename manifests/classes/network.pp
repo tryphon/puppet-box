@@ -3,6 +3,8 @@ class network {
   include network::dhcp::readonly
   include network::ifplugd
   include network::hostname
+  include network::resolvconf
+  include network::resolvconf::readonly
 }
 
 class network::base {
@@ -26,17 +28,6 @@ class network::dhcp::readonly {
     require => Package["dhcp3-client"] 
   } 
 
-  exec { "copy-resolv.conf":
-    command => "cat /etc/resolv.conf > /var/etc/resolv.conf",
-    creates => "/var/etc/resolv.conf",
-    require => File["/var/etc"]
-  }
-
-  file { "/etc/resolv.conf":
-    ensure => "/var/etc/resolv.conf",
-    require => Exec["copy-resolv.conf"]
-  }
-
   readonly::mount_tmpfs { "/var/lib/dhcp3": }
 
   # TODO manage this link with puppet boot
@@ -45,6 +36,14 @@ class network::dhcp::readonly {
 
 class network::ifplugd {
   package { ifplugd: }
+}
+
+class network::resolvconf {
+  package { resolvconf: }
+}
+
+class network::resolvconf::readonly {
+  readonly::mount_tmpfs { "/etc/resolvconf/run": }
 }
 
 class network::hostname {
