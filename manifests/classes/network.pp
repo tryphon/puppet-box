@@ -3,6 +3,8 @@ class network {
   include network::dhcp::readonly
   include network::ifplugd
   include network::hostname
+  include network::resolvconf
+  include network::resolvconf::readonly
 }
 
 class network::base {
@@ -18,24 +20,13 @@ class network::dhcp::readonly {
   include readonly::common
 
   file { "/etc/dhcp3/dhclient.conf":
-    source => "$source_base/files/dhcp3/dhclient.conf", 
+    source => "puppet:///box/dhcp3/dhclient.conf", 
     require => Package["dhcp3-client"] 
   } 
   file { "/etc/dhcp3/dhclient-script":
-    source => "$source_base/files/dhcp3/dhclient-script", 
+    source => "puppet:///box/dhcp3/dhclient-script", 
     require => Package["dhcp3-client"] 
   } 
-
-  exec { "copy-resolv.conf":
-    command => "cat /etc/resolv.conf > /var/etc/resolv.conf",
-    creates => "/var/etc/resolv.conf",
-    require => File["/var/etc"]
-  }
-
-  file { "/etc/resolv.conf":
-    ensure => "/var/etc/resolv.conf",
-    require => Exec["copy-resolv.conf"]
-  }
 
   readonly::mount_tmpfs { "/var/lib/dhcp3": }
 
@@ -45,6 +36,14 @@ class network::dhcp::readonly {
 
 class network::ifplugd {
   package { ifplugd: }
+}
+
+class network::resolvconf {
+  package { resolvconf: }
+}
+
+class network::resolvconf::readonly {
+  readonly::mount_tmpfs { "/etc/resolvconf/run": }
 }
 
 class network::hostname {
@@ -63,6 +62,6 @@ class network::interfaces {
 # DEPRECATED : network/interfaces is now managed by puppet bot
 class network::interfaces::deprecated {
   file { "/etc/network/interfaces":
-    source => "$source_base/files/network/interfaces"
+    source => "puppet:///box/network/interfaces"
   }
 }

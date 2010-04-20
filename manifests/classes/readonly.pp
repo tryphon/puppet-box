@@ -13,11 +13,6 @@ class readonly::common {
     ensure => present
   }
 
-  # mount { ... } tries to (u)mount root fs ...
-  line { "fstab-with-rootfs-ro":
-    file => "/etc/fstab",
-    line => "LABEL=root / ext3 defaults,ro 0 0"
-  }
   file { "/etc/mtab":
     ensure => "/proc/mounts"
   }
@@ -26,11 +21,19 @@ class readonly::common {
 
 }
 
+class readonly::rootfs {
+  # mount { ... } tries to (u)mount root fs ...
+  line { "fstab-with-rootfs-ro":
+    file => "/etc/fstab",
+    line => "LABEL=root / ext3 defaults,ro 0 0"
+  }
+}
+
 # DEPRECATED replaced by puppet management of /var/log.model
 class readonly::initvarlog {
 
   file { "/etc/init.d/varlog":
-    source => "$source_base/files/readonly/varlog.initd",
+    source => "puppet:///box/readonly/varlog.initd",
     mode => 775
   }
 
