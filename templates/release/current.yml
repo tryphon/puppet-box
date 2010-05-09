@@ -1,0 +1,3 @@
+name: <%= release_name %>
+status_updated_at: <%= Time.now %>
+description_url: http://www.tryphon.eu/releases/<%= release_name %>

@@ -1,0 +1,22 @@
+#!/bin/sh -e
+
+tar_file=$1
+current_file=$2
+release_name=`sed -n '/name/ s/name: //p' $current_file`
+
+mount -o remount,rw /boot
+
+trap "mount -o remount,ro /boot; exit" INT TERM EXIT
+
+tar -xf $tar_file -C /boot
+
+cd /boot
+
+ln -fs filesystem-${release_name}.squashfs filesystem.squashfs
+ln -fs vmlinuz-${release_name} vmlinuz
+ln -fs initrd-${release_name}.img initrd.img
+
+cp $current_file /boot/current.yml
+
+sync
+shutdown -r now
