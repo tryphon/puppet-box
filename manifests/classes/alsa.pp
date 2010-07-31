@@ -4,6 +4,11 @@ class alsa::common {
 
   include alsa::mixer
   package { alsa-utils: }
+
+  file { "/usr/local/sbin/lsof-alsa":
+    source => "puppet:///box/alsa/lsof-alsa",
+    mode => 775
+  }
 }
 
 class alsa::readonly {
