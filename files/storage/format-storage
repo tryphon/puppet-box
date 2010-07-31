@@ -1,0 +1,19 @@
+#!/bin/sh -e
+
+if [ $# == 0 ] ; then
+		echo "$0 <device> <label>"
+		exit 1
+fi
+
+device=$1
+label=$2
+
+echo "Press ENTER to continue to format storage on $device with label $label"
+read a
+
+echo '1,,L,' | /sbin/sfdisk -uS $device
+
+partition="$device"1
+if [ -b $partition ]; then
+    mke2fs -j -m 0 -L $label $partition
+fi
