@@ -1,29 +1,60 @@
-#!/bin/sh
+#!/bin/bash
 
-# Try to find the best way to enable capture from line
+capture=true
+playback=false
 
-if amixer controls | grep -q 'Input Source'; then
+case $1 in
+    playback)
+        capture=false
+        playback=true
+        ;;
+    duplex)
+        capture=true
+        playback=true
+        ;;
+    default)
+        echo "Usage amixerconf [capture|playback|duplex]"
+        exit 1
+        ;;
+esac
+
+if [ $capture != "true" ]; then
+    if amixer controls | grep -q 'Input Source'; then
     # Looks like a Realtek ALC887 mixer
     # no capture switch on Line but an "Input Source" control
-    amixer -- sset 'Input Source' 'Line'
-    amixer -- sset 'Capture' -3dB cap
-elif amixer controls | grep -q 'ADC Volume'; then
+        amixer -- sset 'Input Source' 'Line'
+        amixer -- sset 'Capture' 0dB cap
+    elif amixer controls | grep -q 'ADC Volume'; then
     # Looks like a M-Audio Delta 44
-    amixer -- sset ADC,0 -3dB unmute
-    amixer -- sset ADC,1 -3dB unmute
-    amixer -- sset ADC,2 -3dB unmute
-    amixer -- sset ADC,3 -3dB unmute
+        amixer -- sset ADC,0 0dB unmute
+        amixer -- sset ADC,1 0B unmute
+        amixer -- sset ADC,2 0B unmute
+        amixer -- sset ADC,3 0B unmute
 
-    # Loopback inputs
-    amixer -- sset DAC,0 0dB unmute
-    amixer -- sset DAC,1 0dB unmute
-    amixer -- sset DAC,2 0dB unmute
-    amixer -- sset DAC,3 0dB unmute
+        if [ $playback != "true" ]; then
+        # Loopback inputs
+            amixer -- sset DAC,0 0dB unmute
+            amixer -- sset DAC,1 0dB unmute
+            amixer -- sset DAC,2 0dB unmute
+            amixer -- sset DAC,3 0dB unmute
 
-    amixer -- sset 'H/W',0 'H/W In 0'
-    amixer -- sset 'H/W',1 'H/W In 1'
-    amixer -- sset 'H/W',2 'H/W In 2'
-    amixer -- sset 'H/W',3 'H/W In 3'
-else
-    amixer -- sset 'Line' cap
+            amixer -- sset 'H/W',0 'H/W In 0'
+            amixer -- sset 'H/W',1 'H/W In 1'
+            amixer -- sset 'H/W',2 'H/W In 2'
+            amixer -- sset 'H/W',3 'H/W In 3'
+        fi
+    else
+        amixer -- sset 'Line' cap
+    fi
+fi
+
+if [ $playback == "true" ]; then
+    amixer -- sset 'Master' 100% unmute
+    amixer -- sset 'PCM' 100% unmute
+
+    if amixer controls | grep -q 'H/W'; then
+      # TODO support 4 channels  
+      amixer -- sset 'H/W',0 'PCM Out'
+      amixer -- sset 'H/W',1 'PCM Out'
+    fi
 fi
