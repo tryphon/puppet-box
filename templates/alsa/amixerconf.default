@@ -1,0 +1,1 @@
+SCRIPT_OPTS="<%= amixerconf_mode %>"

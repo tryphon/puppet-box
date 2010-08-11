@@ -1,0 +1,40 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          lanuch-puppet
+# Required-Start:    $syslog $alsa-utils
+# Required-Stop:     $syslog
+# Default-Start:     S
+# Default-Stop:      0 6
+### END INIT INFO                                                                                                                                          
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+SCRIPT=/usr/local/bin/amixerconf
+SCRIPT_OPTS=""
+NAME=amixerconf
+DESC="ALSA mixer configuration"
+
+test -x $SCRIPT || exit 0
+
+. /lib/lsb/init-functions
+
+[ -f /etc/default/amixerconf ] && . /etc/default/amixerconf
+
+launch_script() {
+  $SCRIPT $SCRIPT_OPTS 
+}
+
+case "$1" in
+    start|reload|restart|force-reload)
+	log_begin_msg "Loading $DESC ($SCRIPT_OPTS)"
+	launch_script
+	log_end_msg 0
+	;;
+    stop)
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart|force-reload|reload}" >&2
+	exit 1
+	;;
+esac
+
+exit 0

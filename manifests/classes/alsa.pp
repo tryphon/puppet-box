@@ -26,4 +26,19 @@ class alsa::mixer {
     source => "puppet:///box/alsa/amixerconf",
     mode => 775
   }
+
+  file { "/etc/init.d/amixerconf":
+    source => "puppet:///box/alsa/amixerconf.init",
+    mode => 775
+  }
+
+  file { "/etc/default/amixerconf":
+    content => template("box/alsa/amixerconf.default")
+  }
+
+  exec { "update-rc.d-amixerconf":
+    command => "update-rc.d amixerconf start 51 S .",
+    require => File["/etc/init.d/amixerconf"],
+    creates => "/etc/rcS.d/S51amixerconf"
+  }
 }
