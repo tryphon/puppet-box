@@ -12,13 +12,17 @@ case $1 in
         capture=true
         playback=true
         ;;
+    capture)
+        capture=true
+        playback=false
+        ;;
     default)
         echo "Usage amixerconf [capture|playback|duplex]"
         exit 1
         ;;
 esac
 
-if [ $capture != "true" ]; then
+if [ $capture == "true" ]; then
     if amixer controls | grep -q 'Input Source'; then
     # Looks like a Realtek ALC887 mixer
     # no capture switch on Line but an "Input Source" control
@@ -43,15 +47,23 @@ if [ $capture != "true" ]; then
             amixer -- sset 'H/W',2 'H/W In 2'
             amixer -- sset 'H/W',3 'H/W In 3'
         fi
+    elif [ `cat /proc/asound/card0/id` == "Juli" ]; then
+    # It is a Juli@ card
+        # Inputs are always ON and their gain cannot be controled
+        if [ $playback != "true" ]; then
+        # Loopback inputs
+            amixer -- sset 'H/W',0 'H/W In 0'
+            amixer -- sset 'H/W',1 'H/W In 1'
+        fi
     else
         amixer -- sset 'Line' cap
     fi
 fi
 
-if [ $playback == "true" ]; then
-    amixer -- sset 'Master' 100% unmute
-    amixer -- sset 'PCM' 100% unmute
+amixer -- sset 'Master' 100% unmute
+amixer -- sset 'PCM' 100% unmute
 
+if [ $playback == "true" ]; then
     if amixer controls | grep -q 'H/W'; then
       # TODO support 4 channels  
       amixer -- sset 'H/W',0 'PCM Out'
