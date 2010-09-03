@@ -35,7 +35,9 @@ class network::dhcp::readonly {
 }
 
 class network::ifplugd {
-  package { ifplugd: }
+  package { ifplugd: 
+    before => File["/etc/network/interfaces"]
+  }
 }
 
 class network::resolvconf {
