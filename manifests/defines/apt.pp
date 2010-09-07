@@ -37,10 +37,15 @@ define apt::source($key) {
   }
 }
 
-define apt::source::pin($source) {
+define apt::source::pin($source, $release = false) {
+  $real_release = $release ? {
+    false => $source,
+    default => $release
+  }
+
   apt::preferences { $name:
     package => $name, 
-    pin => "release a=$source",
+    pin => "release a=$real_release",
     priority => 999,
     require => Apt::Source[$source]
   }
@@ -54,6 +59,13 @@ define apt::preferences($ensure="present", $package, $pin, $priority) {
 Package: $package
 Pin: $pin
 Pin-Priority: $priority
-"
+",
+    notify => Exec["update-apt-preferences-for-$name"]
   }
+  # OPTIMIZE same action than exec { "concat_${name}" }
+  # Ensure that apt/preferences file is updated now
+  exec { "update-apt-preferences-for-$name":
+    command => "/usr/bin/find /etc/apt/preferences.d -maxdepth 1 -type f ! -name '*puppettmp' -print0 | sort -z | xargs -0 cat >| /etc/apt/preferences",
+    refreshonly => true
+  } 
 }
