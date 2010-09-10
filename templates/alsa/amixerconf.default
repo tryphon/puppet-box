@@ -1,1 +1,1 @@
-SCRIPT_OPTS="<%= amixerconf_mode %>"
+SCRIPT_OPTS="<%= real_amixerconf_mode %>"

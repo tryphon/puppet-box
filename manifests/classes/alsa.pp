@@ -32,6 +32,11 @@ class alsa::mixer {
     mode => 775
   }
 
+  $real_amixerconf_mode = $amixerconf_mode ? {
+    '' => "capture",
+    default => $amixerconf_mode
+  }
+
   file { "/etc/default/amixerconf":
     content => template("box/alsa/amixerconf.default")
   }
