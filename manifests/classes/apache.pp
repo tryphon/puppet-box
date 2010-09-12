@@ -15,7 +15,6 @@ class apache {
     owner => root, 
     group => adm
   }
-
 }
 
 class apache::passenger {
@@ -33,4 +32,11 @@ class apache::passenger {
 class apache::dnssd {
   package { libapache2-mod-dnssd: }
   apache::module { mod-dnssd: config => true }
+}
+
+class apache::proxy::http {
+
+  apache::module { proxy: config => true }
+  apache::module { proxy_http: }
+
 }
