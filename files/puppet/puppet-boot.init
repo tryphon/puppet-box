@@ -1,0 +1,38 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          lanuch-puppet
+# Required-Start:    $syslog
+# Required-Stop:     $syslog
+# Default-Start:     S
+# Default-Stop:      0 6
+### END INIT INFO                                                                                                                                          
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+SCRIPT=/usr/local/sbin/launch-puppet
+SCRIPT_OPTS=""
+NAME=puppet
+DESC="puppet configuration"
+
+test -x $DAEMON || exit 0
+
+. /lib/lsb/init-functions
+
+launch_puppet() {
+  $SCRIPT $SCRIPT_OPTS boot
+}
+
+case "$1" in
+    start|reload|restart|force-reload)
+	log_begin_msg "Reloading $DESC"
+	launch_puppet
+	log_end_msg 0
+	;;
+    stop)
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart|force-reload|reload}" >&2
+	exit 1
+	;;
+esac
+
+exit 0

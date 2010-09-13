@@ -1,0 +1,14 @@
+auto lo
+iface lo inet loopback
+
+<% if network_method == 'static' %>
+iface eth0 inet static
+  address <%= network_static_address %>
+  netmask <%= network_static_netmask %>
+  gateway <%= network_static_gateway %>
+  dns-nameservers <%= network_static_dns1 %>
+<% else %>
+iface eth0 inet dhcp
+<% end %>
+
+auto eth0

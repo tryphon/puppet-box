@@ -1,0 +1,5 @@
+#!/bin/sh
+mount -o remount,rw /boot
+cp /var/etc/puppet/manifests/config.pp /boot/config.pp
+sync
+mount -o remount,ro /boot

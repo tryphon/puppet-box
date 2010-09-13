@@ -1,0 +1,15 @@
+#!/bin/sh -x
+
+options="--logdest syslog"
+if [ "$1" == "boot" ]; then
+    options="--logdest console --tags boot"
+
+    if [  ! -f "/var/etc/puppet/manifests/config.pp" ]; then
+        mkdir -p "/var/etc/puppet/manifests"
+        echo "Restore stored configuration"
+        cp "/boot/config.pp" "/var/etc/puppet/manifests/config.pp"
+        chown www-data "/var/etc/puppet/manifests/config.pp"
+    fi
+fi
+
+/usr/bin/puppet --debug $options /etc/puppet/manifests/site.pp
