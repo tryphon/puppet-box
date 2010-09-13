@@ -24,13 +24,13 @@ OptionParser.new do |opts|
   end
 end
 
-unless ENV['USER'] == 'root'
+unless Process.uid == 0
   puts "You must be root to initialize the storage"
   exit 1
 end
 
 if File.exists?("/dev/disk/by-label/#{@label}")
-  puts "Disk with label #{chouette} exists"
+  puts "Disk with label #{@label} exists"
   exit 0
 end
 
