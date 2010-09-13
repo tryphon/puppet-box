@@ -1,0 +1,3 @@
+class nano {
+  package { nano: }
+}
