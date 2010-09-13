@@ -35,5 +35,6 @@ class box::audio {
 
 class box::storage {
   include mdadm
+  include storage-tools
   # TODO completed with PigeBox/StageBox/ChouetteBox 
 }
