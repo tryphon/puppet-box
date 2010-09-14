@@ -20,7 +20,7 @@ class network::dhcp::readonly {
   include readonly::common
 
   file { "/etc/dhcp3/dhclient.conf":
-    source => "puppet:///box/dhcp3/dhclient.conf", 
+    content => template("box/dhcp3/dhclient.conf"),
     require => Package["dhcp3-client"] 
   } 
   file { "/etc/dhcp3/dhclient-script":
@@ -29,9 +29,6 @@ class network::dhcp::readonly {
   } 
 
   readonly::mount_tmpfs { "/var/lib/dhcp3": }
-
-  # TODO manage this link with puppet boot
-  # file { "/etc/network/run": ensure => "/var/run", force => true }
 }
 
 class network::ifplugd {
