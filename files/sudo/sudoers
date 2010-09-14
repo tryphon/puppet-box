@@ -1,0 +1,6 @@
+Defaults	env_reset
+
+root	ALL=(ALL) ALL
+www-data	ALL=(root) NOPASSWD: /usr/local/sbin/launch-puppet
+www-data	ALL=(root) NOPASSWD: /usr/local/sbin/save-puppet-config
+www-data	ALL=(root) NOPASSWD: /usr/local/sbin/box-upgrade
