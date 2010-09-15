@@ -33,7 +33,7 @@ class network::dhcp::readonly {
 
 class network::ifplugd {
   package { ifplugd: 
-    before => File["/etc/network/interfaces"]
+    before => Link["/etc/network/interfaces"]
   }
 }
 
@@ -53,14 +53,7 @@ class network::hostname {
 }
 
 class network::interfaces {
-  file { "/etc/network/interfaces":
-    ensure => "/var/etc/network/interfaces"
-  }
-}
-
-# DEPRECATED : network/interfaces is now managed by puppet bot
-class network::interfaces::deprecated {
-  file { "/etc/network/interfaces":
-    source => "puppet:///box/network/interfaces"
+  link { "/etc/network/interfaces":
+    target => "/var/etc/network/interfaces"
   }
 }

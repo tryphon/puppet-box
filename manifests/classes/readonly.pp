@@ -13,8 +13,8 @@ class readonly::common {
     ensure => present
   }
 
-  file { "/etc/mtab":
-    ensure => "/proc/mounts"
+  link { "/etc/mtab":
+    target => "/proc/mounts"
   }
 
   readonly::mount_tmpfs { "/var/lib/urandom": }
