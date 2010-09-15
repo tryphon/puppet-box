@@ -2,9 +2,6 @@ class box {
   include network
   include network::interfaces
 
-  include network
-  include network::interfaces
-
   include linux::kernel-2-6-30
   include syslog
   include smtp
