@@ -64,20 +64,24 @@ class Storage
     puts message
   end
 
-  def create
+  def check
     if File.exists?("/dev/disk/by-label/#{@label}")
       log "Disk with label #{@label} exists"
-      return true
+      check_raid1
     else
-      case blank_disks.size
-      when 0
-        log "No blank disk detected"
-        false
-      when 1
-        create_simple
-      else
-        create_raid1
-      end
+      create
+    end
+  end
+
+  def create
+    case blank_disks.size
+    when 0
+      log "No blank disk detected"
+      false
+    when 1
+      create_simple
+    else
+      create_raid1
     end
   end
 
@@ -100,6 +104,28 @@ class Storage
       c.push "mdadm -C /dev/md0 -l 1 --raid-device=2 #{partitions.join(' ')}"
       c.make2fs "/dev/md0", label
     end
+  end
+
+  def check_raid1
+    return unless raid_degraded?
+
+    disk_device = blank_disks.first
+    unless disk_device
+      log "Raid is degraded and no blank disk is available"
+      return false
+    end
+
+    log "Insert #{disk_device} into raid storage"
+
+    execute do |c|
+      partition = c.create_partition disk_device, "fd"
+      c.push "mdadm --manage /dev/md0 --add #{partition}"
+    end
+  end
+  
+  def raid_degraded?
+    degraded_sys_file = "/sys/devices/virtual/block/md0/md/degraded"
+    File.exists?(degraded_sys_file) and IO.read(degraded_sys_file).to_i == 1
   end
 
   def execute(&block)
@@ -147,4 +173,4 @@ class Storage
 
 end
 
-exit (Storage.new(@label).create ? 0 : 1)
+exit (Storage.new(@label).check ? 0 : 1)
