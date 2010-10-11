@@ -29,33 +29,122 @@ unless Process.uid == 0
   exit 1
 end
 
-if File.exists?("/dev/disk/by-label/#{@label}")
-  puts "Disk with label #{@label} exists"
-  exit 0
+class Storage
+
+  attr_reader :label
+
+  def initialize(label)
+    @label = label
+  end
+
+  def exist?
+    File.exists?("/dev/disk/by-label/#{@label}")    
+  end
+
+  def devices
+    IO.read("/proc/partitions").scan(/[hs]d[abcd][1-9]*$/).collect { |p| "/dev/#{p}" }
+  end
+
+  def disks
+    devices.grep(/[^1-9]$/)
+  end
+
+  def partitions(device = "")
+    devices.grep(/#{device}[1-9]$/)
+  end
+
+  def blank_disks
+    disks.select do |disk|
+      partitions(disk).empty? and 
+        `sfdisk -l #{disk} 2>&1`.include?("No partitions found")
+    end
+  end
+
+  def log(message)
+    puts message
+  end
+
+  def create
+    if File.exists?("/dev/disk/by-label/#{@label}")
+      log "Disk with label #{@label} exists"
+      return true
+    else
+      case blank_disks.size
+      when 0
+        log "No blank disk detected"
+        false
+      when 1
+        create_simple
+      else
+        create_raid1
+      end
+    end
+  end
+
+  def create_simple
+    disk_device = blank_disks.first
+    log "Prepare #{disk_device} for storage"
+
+    execute do |c|
+      partition = c.create_partition disk_device
+      c.make2fs partition, label
+    end
+  end
+
+  def create_raid1
+    disk_devices = blank_disks.first(2)
+    log "Prepare #{disk_devices} for raid storage"
+
+    execute do |c|
+      partitions = c.create_partitions disk_devices, "fd"
+      c.push "mdadm -C /dev/md0 -l 1 --raid-device=2 #{partitions.join(' ')}"
+      c.make2fs "/dev/md0", label
+    end
+  end
+
+  def execute(&block)
+    CommandBuilder.new.tap do |builder|
+      yield builder
+    end.execute
+  end
+
+  class CommandBuilder
+
+    def initialize
+      @command_parts = []
+    end
+
+    def create_partition(disk, type = "L")
+      create_partitions([disk], type).first
+    end
+
+    def create_partitions(disks, type = "L")
+      disks.collect do |disk|
+        push "echo '1,,#{type},' | /sbin/sfdisk -uS #{disk}"
+        "#{disk}1"
+      end
+    end
+
+    def make2fs(partition, label)
+      push "mke2fs -j -m 0 -L #{label} #{partition}"
+    end
+
+    def push(command)
+      @command_parts << command
+    end
+
+    def command
+      @command_parts.join(' && ')
+    end
+
+    def execute
+      puts "Run: #{command}"
+      system command
+    end
+
+  end
+
+
 end
 
-partitions = IO.read("/proc/partitions")
-
-blank_disk = partitions.scan(/[hs]d[abcd]$/).detect do |device|
-  partitions.grep(/#{device}[1-9]/).empty? and 
-    `sfdisk -l /dev/#{device} 2>&1`.include?("No partitions found")
-end
-
-unless blank_disk
-  puts "No blank disk detected"
-  exit 1
-end
-
-puts "Prepare #{blank_disk} for storage"
-
-disk_device = "/dev/#{blank_disk}"
-partition_device = "#{disk_device}1"
-
-partition_command = "echo '1,,L,' | /sbin/sfdisk -uS #{disk_device}"
-fs_command = "mke2fs -j -m 0 -L #{@label} #{partition_device}"
-
-command = [partition_command, fs_command].join(' && ')
-puts "Run: #{command}"
-exit 1 unless system command
-
-
+exit (Storage.new(@label).create ? 0 : 1)
