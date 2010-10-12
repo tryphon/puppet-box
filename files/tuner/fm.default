@@ -1,0 +1,22 @@
+# Defaults for tuner initscript
+# sourced by /etc/init.d/fm
+# installed at /etc/default/fm by the maintainer scripts
+
+#
+# This is a POSIX shell fragment
+#
+RUN=no
+if [ -e /dev/radio0 ]; then
+RUN=yes
+fi
+
+FREQUENCY=107.7
+VOLUME=100
+
+if [ -e /etc/fm/fm.conf ]; then
+ . /etc/fm/fm.conf
+fi
+# Additional options that are passed to the Daemon.
+DAEMON_OPTS="-T forever $FREQUENCY $VOLUME"
+USER=nobody
+GROUP=video
