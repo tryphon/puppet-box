@@ -7,7 +7,7 @@ class tuner {
   }
 
   file { "/lib/firmware/dvb-fe-tda10046.fw":
-    source => "$source_base/files/tuner/dvb-fe-tda10046.fw",
+    source => "puppet:///box/tuner/dvb-fe-tda10046.fw",
     mode => 644
   }
 
@@ -16,7 +16,7 @@ class tuner {
   }
 
   file { "/etc/default/fm":
-    source => "$source_base/files/tuner/fm.default",
+    source => "puppet:///box/tuner/fm.default",
     mode => 755
   }
 
@@ -26,7 +26,7 @@ class tuner {
   }
 
   file { "/etc/init.d/fm":
-    source => "$source_base/files/tuner/fm.init",
+    source => "puppet:///box/tuner/fm.init",
     require => File["/etc/default/fm"],
     mode => 755
   }
