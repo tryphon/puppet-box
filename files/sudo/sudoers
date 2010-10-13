@@ -4,3 +4,5 @@ root	ALL=(ALL) ALL
 www-data	ALL=(root) NOPASSWD: /usr/local/sbin/launch-puppet
 www-data	ALL=(root) NOPASSWD: /usr/local/sbin/save-puppet-config
 www-data	ALL=(root) NOPASSWD: /usr/local/sbin/box-upgrade
+
+pige		ALL=(www-data) NOPASSWD : /usr/share/pige/bin/pige
