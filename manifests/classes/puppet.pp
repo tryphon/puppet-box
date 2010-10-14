@@ -58,5 +58,12 @@ class puppet {
     require => File["/etc/init.d/puppet-boot"],
     creates => "/etc/rcS.d/S38puppet-boot"
   }
+
+  sudo::line { "www-data-launch-puppet":
+    line => "www-data	ALL=(root) NOPASSWD: /usr/local/sbin/launch-puppet"
+  }
+  sudo::line { "www-data-save-puppet-config":
+    line => "www-data	ALL=(root) NOPASSWD: /usr/local/sbin/save-puppet-config"
+  }
   
 }

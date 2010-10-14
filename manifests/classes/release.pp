@@ -14,4 +14,7 @@ class release::upgrade {
     source => "puppet:///box/release/box-upgrade",
     mode => 755
   }
+  sudo::line { "www-data-box-upgrade":
+    line => "www-data	ALL=(root) NOPASSWD: /usr/local/sbin/box-upgrade"
+  }
 }
