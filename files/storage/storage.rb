@@ -107,7 +107,7 @@ class Storage
   end
 
   def check_raid1
-    return unless raid_degraded?
+    return true unless raid_degraded?
 
     disk_device = blank_disks.first
     unless disk_device
