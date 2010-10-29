@@ -49,7 +49,8 @@ class munin::read-only {
     ensure => directory
   }
   file { "/etc/munin/plugins": 
-    ensure => "/var/etc/munin/plugins"
+    ensure => "/var/etc/munin/plugins",
+    force => true
   }
 }
 
