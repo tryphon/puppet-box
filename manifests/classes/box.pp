@@ -22,6 +22,8 @@ class box {
   include munin-node
 
   include ntp::readonly
+
+  include lshw
 }
 
 class box::audio {

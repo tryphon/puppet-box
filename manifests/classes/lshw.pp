@@ -1,0 +1,3 @@
+class lshw {
+  package { lshw: }
+}
