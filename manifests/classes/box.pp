@@ -18,8 +18,7 @@ class box {
 
   include release
 
-  include munin::readonly
-  include munin-node
+  include munin::all
 
   include ntp::readonly
 
