@@ -46,11 +46,14 @@ class munin::read-only {
     require => Package[munin]
   }
   file { "/etc/munin/plugins.model": 
-    ensure => directory
+    ensure => directory,
+    require => Package["munin-node"]
   }
+
   file { "/etc/munin/plugins": 
     ensure => "/var/etc/munin/plugins",
-    force => true
+    force => true,
+    require => Package["munin-node"]
   }
 }
 
