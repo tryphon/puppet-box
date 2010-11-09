@@ -35,6 +35,13 @@ class puppet {
     ensure => "/var/etc/puppet/manifests/config.pp"
   }
 
+  file { "/etc/puppet/manifests/classes":
+    ensure => directory
+  }
+  file { "/etc/puppet/manifests/classes/empty.pp":
+    ensure => present
+  }
+
   file { "/etc/puppet/templates":
     ensure => directory,
     recurse => true,
@@ -65,5 +72,5 @@ class puppet {
   sudo::line { "www-data-save-puppet-config":
     line => "www-data	ALL=(root) NOPASSWD: /usr/local/sbin/save-puppet-config"
   }
-  
+
 }
