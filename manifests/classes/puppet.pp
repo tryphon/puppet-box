@@ -2,10 +2,10 @@ class puppet {
   include apt::backport
 
   package { puppet: 
-    ensure => "0.25.4-2~bpo50+1",
-    require => Apt::Source::Pin[puppet]
+    ensure => "2.6.2-1~bpo50+1",
+    require => [Apt::Source::Pin[puppet], Apt::Source::Pin[puppet-common]]
   }
-  apt::source::pin { "puppet":
+  apt::source::pin { ["puppet","puppet-common"]:
     source => "lenny-backports"
   }
 
