@@ -23,6 +23,7 @@ class box {
   include ntp::readonly
 
   include lshw
+  include hal
 }
 
 class box::audio {
