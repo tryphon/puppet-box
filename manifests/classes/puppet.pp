@@ -2,7 +2,7 @@ class puppet {
   include apt::backport
 
   package { puppet: 
-    ensure => "2.6.2-1~bpo50+1",
+    ensure => "2.6.2-3~bpo50+1",
     require => [Apt::Source::Pin[puppet], Apt::Source::Pin[puppet-common]]
   }
   apt::source::pin { ["puppet","puppet-common"]:
