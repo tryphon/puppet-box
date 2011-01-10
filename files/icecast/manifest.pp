@@ -8,7 +8,9 @@ service { "icecast2":
     true => running,
     false => stopped
   },
-  hasrestart => true
+  stop => "/etc/init.d/icecast2 stop && sleep 5",
+  start => "/etc/init.d/icecast2 start && sleep 5"
+  # hasrestart => true
 }
 
 file { ["/var/etc/icecast2"]:
