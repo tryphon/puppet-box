@@ -9,6 +9,15 @@ class alsa::common {
     source => "puppet:///box/alsa/lsof-alsa",
     mode => 775
   }
+
+  file { "/usr/local/bin/alsa-device":
+    source => "puppet:///box/alsa/alsa-device",
+    mode => 775
+  }
+
+  file { "/etc/puppet/manifests/classes/alsa.pp":
+    source => "puppet:///box/alsa/manifest.pp"
+  }
 }
 
 class alsa::readonly {
