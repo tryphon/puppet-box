@@ -55,6 +55,9 @@ if [ $capture == "true" ]; then
             amixer -- sset 'H/W',0 'H/W In 0'
             amixer -- sset 'H/W',1 'H/W In 1'
         fi
+    elif [ `cat /proc/asound/card/id` == "Live" ];then
+    #It is a SoundBlaster Live!
+        amixer -- sset 'AC97' cap 0dB
     else
         amixer -- sset 'Line' cap
     fi
