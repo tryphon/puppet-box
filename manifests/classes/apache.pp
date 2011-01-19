@@ -40,3 +40,7 @@ class apache::proxy::http {
   apache::module { proxy_http: }
 
 }
+
+class apache::rewrite {
+  apache::module { rewrite: }
+}

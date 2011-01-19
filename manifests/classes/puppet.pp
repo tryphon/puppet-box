@@ -2,10 +2,10 @@ class puppet {
   include apt::backport
 
   package { puppet: 
-    ensure => "0.25.4-2~bpo50+1",
-    require => Apt::Source::Pin[puppet]
+    ensure => "2.6.2-4~bpo50+1",
+    require => [Apt::Source::Pin[puppet], Apt::Source::Pin[puppet-common]]
   }
-  apt::source::pin { "puppet":
+  apt::source::pin { ["puppet","puppet-common"]:
     source => "lenny-backports"
   }
 
@@ -35,6 +35,13 @@ class puppet {
     ensure => "/var/etc/puppet/manifests/config.pp"
   }
 
+  file { "/etc/puppet/manifests/classes":
+    ensure => directory
+  }
+  file { "/etc/puppet/manifests/classes/empty.pp":
+    ensure => present
+  }
+
   file { "/etc/puppet/templates":
     ensure => directory,
     recurse => true,
@@ -58,5 +65,12 @@ class puppet {
     require => File["/etc/init.d/puppet-boot"],
     creates => "/etc/rcS.d/S38puppet-boot"
   }
-  
+
+  sudo::line { "www-data-launch-puppet":
+    line => "www-data	ALL=(root) NOPASSWD: /usr/local/sbin/launch-puppet"
+  }
+  sudo::line { "www-data-save-puppet-config":
+    line => "www-data	ALL=(root) NOPASSWD: /usr/local/sbin/save-puppet-config"
+  }
+
 }

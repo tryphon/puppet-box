@@ -11,3 +11,14 @@ define apache::module($config = false) {
     }
   }
 }
+
+define apache::confd($source = '') {
+  $real_source = $source ? {
+    '' => ["puppet:///files/apache2/conf.d/$name", "puppet:///box/apache2/conf.d/$name"],
+    default => $source
+  }
+  file { "/etc/apache2/conf.d/$name":
+    source => $real_source,
+    require => Package[apache]
+  }
+}
