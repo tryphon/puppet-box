@@ -58,6 +58,7 @@ if [ $capture == "true" ]; then
     elif [ `cat /proc/asound/card/id` == "Live" ];then
     #It is a SoundBlaster Live!
         amixer -- sset 'AC97' cap 0dB
+        amixer -- sset 'Line' cap
     else
         amixer -- sset 'Line' cap
     fi
