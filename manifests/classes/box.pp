@@ -17,6 +17,7 @@ class box {
   include sudo
 
   include release
+  include issue
 
   include munin::all
 

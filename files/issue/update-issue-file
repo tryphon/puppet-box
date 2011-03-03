@@ -1,0 +1,77 @@
+#!/usr/bin/env ruby
+
+require 'facter'
+require 'yaml'
+
+class Issue
+
+  attr_accessor :current_file, :output_file
+
+  def initialize(attributes = {})
+    attributes = { 
+      :current_file => '/boot/current.yml',
+      :output_file => '/var/etc/issue'
+    }.update(attributes)
+    
+    attributes.each_pair do |k,v|
+      send("#{k}=", v)
+    end
+  end
+
+  def current_attributes
+    @current_attributes ||= YAML.load(IO.read(current_file))
+  rescue => e
+    puts e.inspect
+    {}
+  end
+
+  def os
+    "Debian GNU/Linux"
+  end
+
+  def name
+    current_attributes["name"] or Facter.value("hostname")
+  end
+
+  def interfaces
+    # Require with facter 1.5.1 ... Facter is empty without
+    Facter.loadfacts unless Facter.value("interfaces")
+    (Facter.value("interfaces") or "").split(',')
+  end
+
+  def ip_addresses
+    interfaces.collect do |interface|
+      Facter.value("ipaddress_#{interface}")
+    end.compact
+  end
+
+  def output(&block)
+    unless output_file == "stdout"
+      File.open(output_file, "w") do |f|
+        yield f
+      end
+    else
+      yield $stdout
+    end
+  end
+  
+  def print
+    output do |f|
+      f.puts "#{os} #{name} \\l\n\nNetwork address(es): #{ip_addresses.join(',')}\n\n"
+    end
+  end
+
+end
+
+options = ARGV.inject({}) do |options, argument|
+  if argument =~ /--([^= ]+)=([^ ]+)/
+    value = $2
+    name = $1.gsub("-","_")
+
+    options[name.to_sym] = value
+  end
+  options
+end
+
+Issue.new(options).print
+
