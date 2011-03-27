@@ -35,6 +35,9 @@ class network::ifplugd {
   package { ifplugd: 
     before => Link["/etc/network/interfaces"]
   }
+  file { "/etc/default/ifplugd":
+    source => "puppet:///box/network/ifplugd.default", 
+  }  
 }
 
 class network::resolvconf {
