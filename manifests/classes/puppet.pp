@@ -74,3 +74,17 @@ class puppet {
   }
 
 }
+
+class puppet::download-config {
+  include cron
+
+  file { "/usr/local/sbin/download-puppet-config":
+    source => "puppet:///box/puppet/download-puppet-config",
+    mode => 755
+  }
+
+  file { "/etc/cron.d/download-puppet-config":
+    content => template("box/puppet/download-puppet-config.cron.d"),
+    require => Package[cron]
+  }
+}

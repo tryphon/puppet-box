@@ -1,0 +1,49 @@
+#!/bin/bash
+
+function log() {
+    logger -t "download-puppet-config" -i $*
+}
+
+if [ "$1" == "--test" ]; then
+    shift
+    config_file="config.pp"
+    launch_puppet="echo should run launch-puppet"
+    save_config="echo shoud save config.pp"
+else
+    config_file="/etc/puppet/manifests/config.pp"
+    launch_puppet="/usr/local/sbin/launch-puppet"
+    save_config="/usr/local/sbin/save-puppet-config"
+fi
+
+config_host="$1"
+
+mac_adress=`facter macaddress`
+config_url="http://$config_host/configs/$mac_adress"
+
+log "retrieve config at $config_url"
+wget -q -N -P /tmp --timeout=10 $config_url
+if [ $? != 0 ]; then
+    log "can't download remote url"
+    exit 2
+fi
+
+config_temp_file="/tmp/$mac_adress"
+
+if [ $config_temp_file -nt $config_file ]; then
+    log "update local configuration"
+    cp $config_temp_file $config_file
+
+    log "launch puppet"
+    $launch_puppet
+
+    if [ $? == 0 ]; then
+        log "configuration successfully applied, save it"
+        $save_config
+    fi
+else
+    log "remote configuration didn't change"
+    exit 1
+fi
+
+
+
