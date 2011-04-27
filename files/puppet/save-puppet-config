@@ -1,5 +1,5 @@
 #!/bin/sh
 mount -o remount,rw /boot
+trap "mount -o remount,ro /boot" ERR EXIT
 cp /var/etc/puppet/manifests/config.pp /boot/config.pp
 sync
-mount -o remount,ro /boot
