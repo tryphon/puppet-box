@@ -5,6 +5,7 @@ class network {
   include network::hostname
   include network::resolvconf
   include network::resolvconf::readonly
+  include network::wifi
 }
 
 class network::base {
@@ -58,5 +59,16 @@ class network::hostname {
 class network::interfaces {
   link { "/etc/network/interfaces":
     target => "/var/etc/network/interfaces"
+  }
+}
+
+
+class network::wifi {
+  package { wpasupplicant: }
+
+  file { "/etc/wpa_supplicant/wpa_cupplicant.conf":
+    mode => 644,
+    content => template("box/wpa_supplicant/wpa_supplicant.conf"),
+    require => Package["wpasupplicant"]
   }
 }
