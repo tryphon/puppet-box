@@ -51,6 +51,10 @@ class puppet {
     source => "puppet:///box/puppet/templates/interfaces"
   }
 
+  file { "/etc/puppet/templates/wpa_supplicant.conf":
+    source => "puppet:///box/puppet/templates/wpa_supplicant/wpa_supplicant.conf"
+  }
+
   file { "/usr/local/sbin/launch-puppet":
     source => "puppet:///box/puppet/launch-puppet",
     mode => 755

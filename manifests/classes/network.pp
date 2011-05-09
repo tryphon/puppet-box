@@ -64,11 +64,23 @@ class network::interfaces {
 
 
 class network::wifi {
-  package { wpasupplicant: }
+  package { [wpasupplicant, firmware-ralink, wireless-tools]: }
 
-  file { "/etc/wpa_supplicant/wpa_cupplicant.conf":
+  file { "/var/etc/wpa_supplicant.conf":
     mode => 644,
     content => template("box/wpa_supplicant/wpa_supplicant.conf"),
     require => Package["wpasupplicant"]
   }
+  link { "/etc/wpa_supplicant/wpa_supplicant.conf":
+    target => "/var/etc/wpa_supplicant.conf"
+  }
+  line { "blacklist rt2800usb":
+    file => "/etc/modprobe.d/blacklist",
+    line => "blacklist rt2800usb"
+  }
+  exec { "update-initramfs":
+    command => "update-initramfs -u",
+    require => Line["blacklist rt2800usb"]
+  }
 }
+
