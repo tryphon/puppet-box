@@ -72,7 +72,8 @@ class network::wifi {
     require => Package["wpasupplicant"]
   }
   link { "/etc/wpa_supplicant/wpa_supplicant.conf":
-    target => "/var/etc/wpa_supplicant.conf"
+    target => "/var/etc/wpa_supplicant.conf",
+    require => Package[wpasupplicant]
   }
   line { "blacklist rt2800usb":
     file => "/etc/modprobe.d/blacklist",
