@@ -5,6 +5,7 @@ class network {
   include network::hostname
   include network::resolvconf
   include network::resolvconf::readonly
+  include network::wifi
 }
 
 class network::base {
@@ -60,3 +61,26 @@ class network::interfaces {
     target => "/var/etc/network/interfaces"
   }
 }
+
+
+class network::wifi {
+  package { [wpasupplicant, firmware-ralink, wireless-tools]: }
+
+  file { "/var/etc/wpa_supplicant.conf":
+    mode => 644,
+    content => template("box/wpa_supplicant/wpa_supplicant.conf"),
+    require => Package["wpasupplicant"]
+  }
+  link { "/etc/wpa_supplicant/wpa_supplicant.conf":
+    target => "/var/etc/wpa_supplicant.conf"
+  }
+  line { "blacklist rt2800usb":
+    file => "/etc/modprobe.d/blacklist",
+    line => "blacklist rt2800usb"
+  }
+  exec { "update-initramfs":
+    command => "update-initramfs -u",
+    require => Line["blacklist rt2800usb"]
+  }
+}
+
