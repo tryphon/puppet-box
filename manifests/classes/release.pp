@@ -18,3 +18,20 @@ class release::upgrade {
     line => "www-data	ALL=(root) NOPASSWD: /usr/local/sbin/box-upgrade"
   }
 }
+
+class release::cron {
+  include release::current
+  include release::upgrade
+
+  package { box-release: ensure => latest, provider => gem }
+
+  $real_release_cron_before_download = $release_cron_before_download ? {
+    '' => "/bin/true",
+    default => $release_cron_before_download
+  }
+
+  file { "/etc/cron.d/box-release":
+    content => "30 *    * * *   root	/var/lib/gems/1.8/bin/box-release --current /boot/current.yml --install /usr/local/sbin/box-upgrade --before-download='$real_release_cron_before_download' http://download.tryphon.eu/$box_name/latest.yml\n",
+    require => Package[box-release]
+  }
+}
