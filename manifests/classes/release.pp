@@ -23,7 +23,7 @@ class release::cron {
   include release::current
   include release::upgrade
 
-  package { box-release: ensure => latest, provider => gem }
+  ruby::gem { box-release: }
 
   $real_release_cron_before_download = $release_cron_before_download ? {
     '' => "/bin/true",
