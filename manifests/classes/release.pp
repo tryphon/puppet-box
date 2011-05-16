@@ -25,6 +25,9 @@ class release::cron {
 
   ruby::gem { box-release: }
 
+  ruby::gem { SyslogLogger: require => Ruby::Gem[hoe] }
+  ruby::gem { hoe: ensure => '2.8.0' }
+
   $real_release_cron_before_download = $release_cron_before_download ? {
     '' => "/bin/true",
     default => $release_cron_before_download
