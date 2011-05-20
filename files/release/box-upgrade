@@ -19,4 +19,4 @@ ln -fs initrd-${release_name}.img initrd.img
 cp $current_file /boot/current.yml
 
 sync
-shutdown -r now
+/sbin/shutdown -r now
