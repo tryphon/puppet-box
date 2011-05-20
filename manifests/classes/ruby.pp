@@ -1,3 +1,10 @@
 class ruby::gems {
-  package { rubygems: }
+  include apt::backport
+
+  package { rubygems: 
+    require => Apt::Source::Pin[rubygems]
+  }
+  apt::source::pin { rubygems:
+    source => "lenny-backports"
+  }
 }
