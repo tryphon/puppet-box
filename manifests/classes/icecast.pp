@@ -43,5 +43,4 @@ class icecast2 {
     owner => icecast2,
     require => Package[icecast2]
   }
-
 }

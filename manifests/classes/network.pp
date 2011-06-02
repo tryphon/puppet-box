@@ -60,8 +60,14 @@ class network::interfaces {
   link { "/etc/network/interfaces":
     target => "/var/etc/network/interfaces"
   }
-}
+  file { "/etc/puppet/manifests/classes/network.pp":
+    source => "puppet:///box/network/manifest.pp"
+  }
 
+  link { "/etc/network/run":
+    target => "/var/etc/network/run"
+  }
+}
 
 class network::wifi {
   package { [wpasupplicant, firmware-ralink, wireless-tools]: }

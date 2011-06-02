@@ -31,10 +31,17 @@ class box::audio {
   include alsa::common
   include alsa::readonly
   include alsa::mixer
+  include box::user
 }
 
 class box::storage {
   include mdadm
   include storage-tools
   # TODO completed with PigeBox/StageBox/ChouetteBox 
+}
+
+class box::user {
+  user { boxuser:
+    groups => [audio]
+  }
 }
