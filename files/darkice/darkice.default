@@ -7,7 +7,7 @@
 #
 RUN=yes
 # Additional options that are passed to the Daemon.
-DAEMON_OPTS="-c /etc/darkice/darkice.cfg --pidfile $PIDFILE"
+DAEMON_OPTS="-c /etc/darkice/darkice.cfg -p $PIDFILE"
 USER=root
 GROUP=audio
 
