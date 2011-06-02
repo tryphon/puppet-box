@@ -13,6 +13,6 @@ class issue {
 
   link { ["/etc/network/if-up.d/update-issue-file", "/etc/network/if-down.d/update-issue-file"]:
     target => "/usr/local/sbin/update-issue-file",
-    require => File["/usr/local/sbin/update-issue-file"]
+    require => [File["/usr/local/sbin/update-issue-file"], Package[ifupdown]]
   }
 }
