@@ -1,6 +1,15 @@
 class liquidsoap {
+  include apt::backport
+
   # TODO don't install recommended icecast2
-  package { liquidsoap: }
+  package { liquidsoap: 
+    ensure => "0.9.2-1~bpo50+3",
+    require => Apt::Source::Pin[liquidsoap]
+  }
+
+  apt::source::pin { "liquidsoap":
+    source => "lenny-backports"
+  }
 
   exec { "add-liquidsoap-user-to-audio-group":
     command => "adduser liquidsoap audio",
