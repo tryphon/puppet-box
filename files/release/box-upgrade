@@ -18,5 +18,11 @@ ln -fs initrd-${release_name}.img initrd.img
 
 cp $current_file /boot/current.yml
 
+# Remove old releases
+keep_releases=5
+ls -r filesystem-*.squashfs | tail -n +$keep_releases | xargs -r rm
+ls -r vmlinuz-* | tail -n +$keep_releases | xargs -r rm
+ls -r initrd-*.img | tail -n +$keep_releases | xargs -r rm
+
 sync
 /sbin/shutdown -r now
