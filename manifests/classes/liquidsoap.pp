@@ -33,3 +33,15 @@ class liquidsoap::readonly {
     require => Package[liquidsoap]
   }
 }
+
+define liquidsoap::log() {
+  pipe { "/var/log.model/liquidsoap/$name.log":
+    owner => "liquidsoap",
+    require => [Package[liquidsoap], File["/var/log.model/liquidsoap"]]
+  }
+
+  include rsyslog::module::file
+  file { "/etc/rsyslog.d/liquidsoap-$name.conf":
+    content => template("box/liquidsoap/rsyslog.conf")
+  }
+}

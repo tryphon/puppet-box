@@ -30,4 +30,18 @@ class icecast2 {
     owner => icecast2,
     require => Package[icecast2]
   }
+
+  # Icecast is blocked when using pipes
+  #
+  # pipe { [ "/var/log.model/icecast2/error.log", "/var/log.model/icecast2/access.log" ]:
+  #   owner => "icecast2",
+  #   require => [Package[icecast2], File["/var/log.model/icecast2"]]
+  # }
+
+  # Rsyslog doesn't reopen log files rotated by Icecast
+  #
+  # include rsyslog::module::file
+  # file { "/etc/rsyslog.d/icecast.conf":
+  #   source => "puppet:///box/icecast/rsyslog.conf"
+  # }
 }
