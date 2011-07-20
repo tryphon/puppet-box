@@ -31,17 +31,17 @@ if [ $capture == "true" ]; then
     elif amixer controls | grep -q 'ADC Volume'; then
     # Looks like a M-Audio Delta 44
         amixer -- sset ADC,0 0dB unmute
-        amixer -- sset ADC,1 0B unmute
-        amixer -- sset ADC,2 0B unmute
-        amixer -- sset ADC,3 0B unmute
+        amixer -- sset ADC,1 0dB unmute
+        amixer -- sset ADC,2 0dB unmute
+        amixer -- sset ADC,3 0dB unmute
+
+        amixer -- sset DAC,0 0dB unmute
+        amixer -- sset DAC,1 0dB unmute
+        amixer -- sset DAC,2 0dB unmute
+        amixer -- sset DAC,3 0dB unmute
 
         if [ $playback != "true" ]; then
         # Loopback inputs
-            amixer -- sset DAC,0 0dB unmute
-            amixer -- sset DAC,1 0dB unmute
-            amixer -- sset DAC,2 0dB unmute
-            amixer -- sset DAC,3 0dB unmute
-
             amixer -- sset 'H/W',0 'H/W In 0'
             amixer -- sset 'H/W',1 'H/W In 1'
             amixer -- sset 'H/W',2 'H/W In 2'
