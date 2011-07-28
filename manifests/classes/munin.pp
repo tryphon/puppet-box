@@ -7,6 +7,7 @@ class munin::all {
 }
 
 class munin {
+  include apache
   package { munin: }
   
   file { "/etc/munin/munin.conf":
