@@ -29,7 +29,9 @@ fi
 
 config_temp_file="/tmp/$mac_adress"
 
-if [ $config_temp_file -nt $config_file ]; then
+diff $config_temp_file $config_file > /dev/null
+
+if [ $? == 1 ]; then
     log "update local configuration"
     cp $config_temp_file $config_file
 

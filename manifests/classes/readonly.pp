@@ -1,5 +1,4 @@
 class readonly::common {
-
   file { "/var/etc":
     ensure => directory
   }
@@ -19,6 +18,9 @@ class readonly::common {
 
   readonly::mount_tmpfs { "/var/lib/urandom": }
 
+  file { "/etc/puppet/manifests/classes/readonly.pp":
+    source => "puppet:///box/readonly/manifest.pp"
+  }
 }
 
 class readonly::rootfs {

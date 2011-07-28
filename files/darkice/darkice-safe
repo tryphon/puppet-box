@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Filter darkice options 
+darkice_options=""
+while getopts c:v:p: OPTION
+do
+     case $OPTION in
+         c)
+             darkice_options="$darkice_options -c $OPTARG"
+             ;;
+         v)
+             darkice_options="$darkice_options -v $OPTARG"
+             ;;
+         p)
+             pid_file=$OPTARG
+             ;;
+         ?)
+             ;;
+     esac
+done
+
+on_exit_pid="/bin/true"
+if [ -n "$pid_file" ]; then
+    echo "$$" > $pid_file
+    on_exit_pid="rm -f $pid_file"
+fi
+
+LOG_TOPIC="darkice-safe"
+LOG_TOPIC_OUT="$LOG_TOPIC[$$]"
+LOG_TOPIC_ERR="$LOG_TOPIC-err[$$]"
+
+exec > >(logger -t "$LOG_TOPIC_OUT")
+exec 2> >(logger -t "$LOG_TOPIC_ERR" )
+
+while [ true ]; do
+  /usr/bin/darkice $darkice_options &
+
+  darkice_pid=$!
+  trap "kill -9 $darkice_pid; $on_exit_pid; exit 0" INT TERM EXIT
+  wait $!
+  trap - INT TERM EXIT
+
+  echo "darkice has been stopped, restart"
+  sleep 5
+done
