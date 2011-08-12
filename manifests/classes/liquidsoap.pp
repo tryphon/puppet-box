@@ -42,6 +42,7 @@ define liquidsoap::log() {
 
   include rsyslog::module::file
   file { "/etc/rsyslog.d/liquidsoap-$name.conf":
-    content => template("box/liquidsoap/rsyslog.conf")
+    content => template("box/liquidsoap/rsyslog.conf"),
+    require => Package[rsyslog]
   }
 }

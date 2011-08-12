@@ -10,6 +10,7 @@ class syslog {
 
 class rsyslog::module::file {
   file { "/etc/rsyslog.d/00imfile.conf":
-    content => '$ModLoad imfile'
+    content => '$ModLoad imfile',
+    require => Package[rsyslog]
   }
 }
