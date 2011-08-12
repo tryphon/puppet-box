@@ -34,7 +34,6 @@ if [ $capture == "true" ]; then
         amixer -- sset ADC,1 0dB unmute
         amixer -- sset ADC,2 0dB unmute
         amixer -- sset ADC,3 0dB unmute
-
         amixer -- sset DAC,0 0dB unmute
         amixer -- sset DAC,1 0dB unmute
         amixer -- sset DAC,2 0dB unmute
