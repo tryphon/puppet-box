@@ -1,0 +1,11 @@
+/var/log/syslog
+{
+	rotate 3
+	daily
+	missingok
+	delaycompress
+	compress
+	postrotate
+		invoke-rc.d rsyslog reload > /dev/null
+	endscript
+}

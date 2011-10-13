@@ -6,6 +6,12 @@ class syslog {
     require => Package[rsyslog]
   }
 
+  file { "/etc/logrotate.d/rsyslog":
+    source => "puppet:///box/syslog/rsyslog.logrotate"
+  }
+
+  readonly::mount_tmpfs { "/var/lib/logrotate": }
+
 }
 
 class rsyslog::module::file {
