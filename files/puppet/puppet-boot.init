@@ -1,11 +1,12 @@
 #! /bin/sh
 ### BEGIN INIT INFO
-# Provides:          lanuch-puppet
-# Required-Start:    $syslog
-# Required-Stop:     $syslog
+# Provides:          puppet-boot
+# Required-Start:    $local_fs hostname
+# Required-Stop:     $local_fs
+# X-Start-Before:    $network
 # Default-Start:     S
-# Default-Stop:      0 6
-### END INIT INFO                                                                                                                                          
+# Default-Stop:
+### END INIT INFO
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 SCRIPT=/usr/local/sbin/launch-puppet

@@ -36,8 +36,26 @@ class box::audio {
 
 class box::storage {
   include mdadm
-  include storage-tools
+
   # TODO completed with PigeBox/StageBox/ChouetteBox 
+
+  file { "/srv/$box_storage_name":
+    ensure => directory
+  }
+
+  line { "fstab-pige":
+    file => "/etc/fstab",
+    line => "LABEL=$box_storage_name /srv/$box_storage_name ext3 defaults 0 0"
+  }
+
+  file { "/usr/local/sbin/storage":
+    source => "puppet:///box/storage/storage.rb",
+    mode => 755
+  }
+
+  file { "/etc/puppet/manifests/classes/storage-${box_storage_name}.pp":
+    content => template("box/storage/manifest.pp")
+  }
 }
 
 class box::user {

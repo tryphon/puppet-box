@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ `cat /proc/asound/card0/id` == "Live" ]; then
+if [ `cat /proc/asound/card0/id` = "Live" ]; then
     echo -n "hw:0"
 else
     echo -n "plughw:0"

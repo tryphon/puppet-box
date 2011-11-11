@@ -1,6 +1,8 @@
 # Retrieved from module puppet-apt
 
 class apt {
+  include debian
+
   exec { "apt-get_update":
     command => "apt-get update",
     refreshonly => true
@@ -12,22 +14,44 @@ class apt {
     dir => "/etc/apt/preferences.d",
     before  => Exec["apt-get_update"]
   }
+
+  file { "/etc/apt/apt.conf.d/02recommended-suggested":
+    content => "APT::Install-Recommends \"0\";\nAPT::Install-Suggests \"0\";"
+  }
 }
 
 class apt::tryphon {
-  apt::source { tryphon: 
-    key => "C6ADBBD5"
+  include debian
+
+  if $debian::lenny {
+    apt::source { tryphon: 
+      key => "C6ADBBD5",
+      content => "deb http://debian.tryphon.org ${debian::release}-backports main contrib\ndeb http://debian.tryphon.org $debian::release main contrib"
+    }
+  } else {
+    apt::source { tryphon: 
+      key => "C6ADBBD5",
+      content => "deb http://debian.tryphon.org $debian::release main contrib"
+    }
   }
 }
 
 class apt::backport {
-  apt::source { lenny-backports: 
-    key => "16BA136C"
+  include debian
+
+  if $debian::lenny {
+    apt::source { lenny-backports: 
+      key => "16BA136C",
+      content => "deb http://backports.debian.org/debian-backports ${debian::release}-backports main contrib non-free"
+    }
   }
 }
 
 class apt::multimedia {
+  include debian
+
   apt::source { debian-multimedia: 
-    key => "1F41B907"
+    key => "1F41B907",
+    content => "deb http://www.debian-multimedia.org $debian::release main non-free"
   }
 }
