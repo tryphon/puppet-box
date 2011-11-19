@@ -42,15 +42,20 @@ class darkice::full {
   include darkice::common
   include apt::multimedia
   include apt::tryphon
+
   package { darkice-full: 
     ensure => "1.0-0.0~bpo50+1",
     alias => darkice,
-    require => [Apt::Source[tryphon], Apt::Source[debian-multimedia], Apt::Source::Pin[darkice-full]]
+    require => [Apt::Source[tryphon], Apt::Source[debian-multimedia]]
   }
-  apt::source::pin { [darkice-full, libaacplus1]:
-    source => "tryphon",
-    release => "lenny-backports"
-  }
+
+  if $debian::lenny {
+    apt::source::pin { [darkice-full, libaacplus1]:
+      source => "tryphon",
+      release => "lenny-backports",
+      before => Package[darkice-full]
+    }
+  } 
 }
 
 class darkice {

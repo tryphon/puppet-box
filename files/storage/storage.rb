@@ -146,7 +146,7 @@ class Storage
 
     def create_partitions(disks, type = "L")
       disks.collect do |disk|
-        push "echo '1,,#{type},' | /sbin/sfdisk -uS #{disk}"
+        push "echo '1,,#{type},' | /sbin/sfdisk -uS --force #{disk}"
         "#{disk}1"
       end
     end

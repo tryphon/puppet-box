@@ -20,6 +20,10 @@ class network::dhcp::readonly {
   include network::dhcp
   include readonly::common
 
+
+  file { "/etc/dhcp3":
+    ensure => directory
+  } 
   file { "/etc/dhcp3/dhclient.conf":
     content => template("box/dhcp3/dhclient.conf"),
     require => Package["dhcp3-client"] 

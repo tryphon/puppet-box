@@ -38,7 +38,19 @@ class munin {
 }
 
 class munin::read-only {
-  readonly::mount_tmpfs { ["/var/lib/munin","/var/www/munin"]: }
+  if $debian::lenny {
+    readonly::mount_tmpfs { "/var/www/munin": }
+  } else {
+    readonly::mount_tmpfs { "/var/cache/munin/www": }
+    
+    # Used by apache configuration
+    file { "/var/www/munin":
+      ensure => "/var/cache/munin/www"
+    }
+  }
+  
+
+  readonly::mount_tmpfs { "/var/lib/munin": }
 
   file { "/var/log.model/munin": 
     ensure => directory, 

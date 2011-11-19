@@ -1,12 +1,15 @@
 class puppet {
-  include apt::backport
-
-  package { puppet: 
-    ensure => "2.6.2-4~bpo50+1",
-    require => [Apt::Source::Pin[puppet], Apt::Source::Pin[puppet-common]]
-  }
-  apt::source::pin { ["puppet","puppet-common"]:
-    source => "lenny-backports"
+  if $debian::lenny {
+    include apt::backport
+    package { puppet: 
+      ensure => "2.6.2-4~bpo50+1",
+      require => [Apt::Source::Pin[puppet], Apt::Source::Pin[puppet-common]]
+    }
+    apt::source::pin { ["puppet","puppet-common"]:
+      source => "lenny-backports"
+    }
+  } else {
+    package { puppet: }
   }
 
   # Fix support of START=no
@@ -22,6 +25,7 @@ class puppet {
     mode => 755,
     require => File["/usr/local/sbin/launch-puppet"]
   }
+
   file { "/etc/puppet/manifests":
     ensure => directory,
     recurse => true,
@@ -64,10 +68,18 @@ class puppet {
     mode => 755
   }
 
-  exec { "update-rc.d-puppet-boot":
-    command => "update-rc.d puppet-boot start 38 S . stop 40 0 6 .",
-    require => File["/etc/init.d/puppet-boot"],
-    creates => "/etc/rcS.d/S38puppet-boot"
+  if $debian::lenny {
+    exec { "update-rc.d-puppet-boot":
+      command => "update-rc.d puppet-boot start 38 S . stop 40 0 6 .",
+      require => File["/etc/init.d/puppet-boot"],
+      creates => "/etc/rcS.d/S38puppet-boot"
+    }
+  } else {
+    exec { "update-rc.d-puppet-boot":
+      command => "insserv puppet-boot",
+      require => File["/etc/init.d/puppet-boot"],
+      unless => "ls /etc/rcS.d/S*puppet-boot > /dev/null 2>&1"
+    }
   }
 
   sudo::line { "www-data-launch-puppet":
