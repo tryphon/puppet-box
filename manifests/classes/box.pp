@@ -7,6 +7,7 @@ class box {
   include smtp
   include nano
   include ssh
+  include cron
   
   include dbus::readonly
   include avahi
