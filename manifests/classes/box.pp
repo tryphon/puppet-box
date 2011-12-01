@@ -67,4 +67,13 @@ class box::user {
     target => "/boot/boxuser"
 #TODO find a way to make this operation dependant of the presence of the target dir in /boot
   }
+
+  sudo::line { "boxuser-reboot":
+    line => "boxuser	ALL=(root) NOPASSWD: /sbin/reboot"
+  }
+
+  sudo::line { "boxuser-syslog":
+    line => "boxuser	ALL=(root) NOPASSWD: /usr/bin/tail -f /var/log/syslog"
+  }
+
 }
