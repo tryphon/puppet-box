@@ -63,4 +63,8 @@ class box::user {
   user { boxuser:
     groups => [audio]
   }
+  link { "/home/boxuser":
+    target => "/boot/boxuser"
+#TODO find a way to make this operation dependant of the presence of the target dir in /boot
+  }
 }
