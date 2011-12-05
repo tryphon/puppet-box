@@ -3,7 +3,7 @@ class syslog {
 
   file { "/etc/rsyslog.conf":
     source => "puppet:///box/syslog/rsyslog.conf",
-    require => Package[rsyslog]
+    require => [Package[rsyslog], File["/usr/local/bin/flogrotate"]]
   }
 
   file { "/etc/logrotate.d/rsyslog":
@@ -12,6 +12,17 @@ class syslog {
 
   readonly::mount_tmpfs { "/var/lib/logrotate": }
 
+  file { "/var/log.model/syslog": 
+    ensure => present, 
+    owner => root, 
+    group => adm,
+    mode => 640
+  }
+
+  file { "/usr/local/bin/flogrotate":
+    source => "puppet:///box/syslog/flogrotate",
+    mode => 755
+  }
 }
 
 class rsyslog::module::file {

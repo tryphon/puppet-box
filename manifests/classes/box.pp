@@ -4,6 +4,8 @@ class box {
 
   include linux::kernel-2-6-30
   include syslog
+  # to allow www-data to read syslog
+  include apache::syslog
   include smtp
   include nano
   include ssh

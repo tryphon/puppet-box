@@ -44,3 +44,11 @@ class apache::proxy::http {
 class apache::rewrite {
   apache::module { rewrite: }
 }
+
+class apache::syslog {
+  exec { "add-www-data-user-to-adm-group":
+    command => "adduser www-data adm",
+    unless => "grep '^adm:.*www-data' /etc/group",
+    require => Package[apache]
+  }
+}

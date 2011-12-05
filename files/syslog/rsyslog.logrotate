@@ -5,6 +5,7 @@
 	missingok
 	delaycompress
 	compress
+  create 640 root adm
 	postrotate
 		invoke-rc.d rsyslog reload > /dev/null
 	endscript
