@@ -10,6 +10,10 @@ class syslog {
     source => "puppet:///box/syslog/rsyslog.logrotate"
   }
 
+  file { "/var/lib/logrotate":  
+    ensure => directory
+  }
+
   readonly::mount_tmpfs { "/var/lib/logrotate": }
 
 }
