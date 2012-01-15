@@ -50,7 +50,7 @@ class network::resolvconf {
 }
 
 class network::resolvconf::readonly {
-  readonly::mount_tmpfs { "/etc/resolvconf/run": }
+  # readonly::mount_tmpfs { "/etc/resolvconf/run": }
 }
 
 class network::hostname {
