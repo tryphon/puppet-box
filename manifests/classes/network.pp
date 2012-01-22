@@ -12,7 +12,7 @@ class network::base {
   package { [netbase, net-tools]: } 
 
   package { ifupdown:
-    before => Link["/etc/network/interfaces"]
+    before => [Link["/etc/network/interfaces"], Link["/etc/network/run"]]
   }
 }
 
