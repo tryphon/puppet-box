@@ -1,6 +1,7 @@
 class release {
   include release::current
   include release::upgrade
+  include release::gem
 }
 
 class release::current {
@@ -19,14 +20,17 @@ class release::upgrade {
   }
 }
 
-class release::cron {
-  include release::current
-  include release::upgrade
-
+class release::gem {
   ruby::gem { box-release: }
 
   ruby::gem { SyslogLogger: require => Ruby::Gem[hoe] }
   ruby::gem { hoe: ensure => '2.8.0' }
+}
+
+class release::cron {
+  include release::current
+  include release::upgrade
+  include release::gem
 
   $real_release_cron_before_download = $release_cron_before_download ? {
     '' => "/bin/true",

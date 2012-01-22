@@ -1,4 +1,7 @@
 class ruby::gems {
+  file { "/etc/gemrc":
+    content => "gem: --no-rdoc --no-ri\n"
+  }
   if $debian::lenny {
     include apt::tryphon
     package { rubygems: 
