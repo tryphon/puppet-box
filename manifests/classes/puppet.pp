@@ -92,8 +92,6 @@ class puppet {
 }
 
 class puppet::download-config {
-  include cron
-
   file { "/usr/local/sbin/download-puppet-config":
     source => "puppet:///box/puppet/download-puppet-config",
     mode => 755

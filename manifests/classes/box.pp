@@ -4,9 +4,12 @@ class box {
 
   include linux::kernel-2-6-30
   include syslog
+  # to allow www-data to read syslog
+  include apache::syslog
   include smtp
   include nano
   include ssh
+  include cron
   
   include dbus::readonly
   include avahi
@@ -60,6 +63,40 @@ class box::storage {
 
 class box::user {
   user { boxuser:
-    groups => [audio]
+    groups => [audio, adm]
+  }
+
+  file { "/home/boxuser":
+    ensure => directory
+  }
+
+  readonly::mount_tmpfs { "/home/boxuser":
+    options => "size=15M,uid=boxuser,gid=boxuser,mode=0700",
+    require => User[boxuser]
+  }
+
+  sudo::line { "boxuser-reboot":
+    line => "boxuser	ALL=(root) NOPASSWD: /sbin/reboot"
+  }
+
+  sudo::line { "boxuser-syslog":
+    line => "boxuser	ALL=(root) NOPASSWD: /usr/bin/tail -f /var/log/syslog"
+  }
+
+  file { "/usr/local/bin/syslog":
+    content => "#!/bin/sh\nsudo /usr/bin/tail -f /var/log/syslog\n",
+    mode => 755
+  }
+
+  file { "/etc/skel/.ssh":
+    ensure => directory,
+    mode => 0700
+  }
+
+  # Requires to sync boxuser home on boot
+  include rsync
+
+  file { "/etc/puppet/manifests/classes/boxuser.pp":
+    source => "puppet:///box/boxuser/manifest.pp"
   }
 }

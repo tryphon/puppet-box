@@ -1,0 +1,7 @@
+#!/bin/sh
+mv -f ${1} ${1}.1
+
+# Create a new empty file with same owner and permissions
+touch ${1}
+chown --reference=${1}.1 ${1}
+chmod --reference=${1}.1 ${1}

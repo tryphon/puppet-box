@@ -9,7 +9,11 @@ class network {
 }
 
 class network::base {
-  package { [netbase, ifupdown, net-tools]: } 
+  package { [netbase, net-tools]: } 
+
+  package { ifupdown:
+    before => [Link["/etc/network/interfaces"], Link["/etc/network/run"]]
+  }
 }
 
 class network::dhcp {

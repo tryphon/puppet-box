@@ -4,7 +4,7 @@ class liquidsoap {
     include apt::backport
     package { liquidsoap: 
       ensure => "0.9.2-1~bpo50+3",
-      require => Apt::Source::Pin[liquidsoap]
+      require => [Apt::Source::Pin[liquidsoap], Package[sox]]
     }  
     apt::source::pin { "liquidsoap":
       source => "lenny-backports"
@@ -12,6 +12,8 @@ class liquidsoap {
   } else {
     package { liquidsoap: }
   }
+
+  include sox
 
   exec { "add-liquidsoap-user-to-audio-group":
     command => "adduser liquidsoap audio",
