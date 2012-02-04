@@ -33,7 +33,11 @@ class network::dhcp::readonly {
     require => Package["dhcp3-client"] 
   } 
 
-  readonly::mount_tmpfs { "/var/lib/dhcp3": }
+  if $debian::lenny {
+    readonly::mount_tmpfs { "/var/lib/dhcp3": }
+  } else {
+    readonly::mount_tmpfs { "/var/lib/dhcp": }
+  }
 }
 
 class network::ifplugd {
