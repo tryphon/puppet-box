@@ -37,6 +37,7 @@ class network::dhcp::readonly {
     require => Package["dhcp3-client"] 
   } 
 
+  include debian
   if $debian::lenny {
     readonly::mount_tmpfs { "/var/lib/dhcp3": }
   } else {
@@ -102,4 +103,3 @@ class network::wifi {
     require => Line["blacklist rt2800usb"]
   }
 }
-
