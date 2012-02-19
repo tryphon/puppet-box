@@ -9,4 +9,9 @@ class mysql::server {
   file { "/etc/puppet/manifests/classes/mysql.pp":
     content => template("box/mysql/manifest.pp")
   }
+
+  file { "/etc/mysql/conf.d/bind-address.cnf":
+    content => "[mysqld]\nbind-address          = 0.0.0.0\n",
+    require => Package["mysql-server"]
+  }
 }
