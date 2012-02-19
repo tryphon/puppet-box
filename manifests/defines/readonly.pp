@@ -3,8 +3,10 @@ define readonly::mount_tmpfs($options = false) {
     false => '',
     default => ",$options"
   }
-  line { "fstab-with-tmfs-$name":
-    file => "/etc/fstab",
-    line => "tmpfs ${name} tmpfs defaults,noatime${additional_options} 0 0"
+  mount { $name:
+    ensure => defined,
+    fstype => "tmpfs",
+    device => "tmpsfs",
+    options => "defaults,noatime${additional_options}"
   }
 }

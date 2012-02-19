@@ -46,9 +46,11 @@ class box::storage {
     ensure => directory
   }
 
-  line { "fstab-pige":
-    file => "/etc/fstab",
-    line => "LABEL=$box_storage_name /srv/$box_storage_name ext3 defaults 0 0"
+  mount { "/srv/$box_storage_name":
+    ensure => defined,
+    fstype => "ext3",
+    device => "LABEL=$box_storage_name",
+    options => "defaults"
   }
 
   file { "/usr/local/sbin/storage":
