@@ -1,4 +1,10 @@
 class mysql::server {
+  # FIXME workaround to ignore user creation problem
+  file { "/usr/local/bin/ypwhich":
+    ensure => "/bin/true",
+    before => Package["mysql-server"]
+  }
+
   package { "mysql-server": }
 
   file { "/var/lib/mysql":
