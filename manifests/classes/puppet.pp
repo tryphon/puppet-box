@@ -33,7 +33,7 @@ class puppet {
   }
 
   file { "/boot/config.pp":
-    source => ["$source_base/files/puppet/config.pp", "puppet:///box/puppet/config.pp"]
+    source => ["puppet:///files/puppet/config.pp.${box_name}", "puppet:///files/puppet/config.pp", "puppet:///box/puppet/config.pp"]
   }
   file { "/etc/puppet/manifests/config.pp":
     ensure => "/var/etc/puppet/manifests/config.pp"
@@ -52,7 +52,7 @@ class puppet {
     source => "$source_base/files/puppet/templates"
   }
   file { "/etc/puppet/templates/interfaces":
-    source => "puppet:///box/puppet/templates/interfaces"
+    source => ["puppet:///files/network/interfaces.${box_name}", "puppet:///files/network/interfaces", "puppet:///box/puppet/templates/interfaces"]
   }
 
   file { "/etc/puppet/templates/wpa_supplicant.conf":
