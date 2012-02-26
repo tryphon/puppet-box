@@ -11,7 +11,7 @@ file { $mysql_real_directory:
 
 exec { "mysql_install_db":
   command => "/usr/bin/mysql_install_db --rpm",
-  creates => "/srv/rivendell§/mysql/mysql/user.MYD",
+  creates => "/var/lib/mysql/mysql/user.MYD",
   require => File[$mysql_real_directory],
   tag => boot
 }
