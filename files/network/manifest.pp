@@ -3,6 +3,8 @@ file { ["/var/etc/network", "/var/etc/network/run"]:
   tag => boot
 }
 
+$network_interfaces=split($interfaces,",")
+
 file { "/var/etc/network/interfaces":
   content => template("/etc/puppet/templates/interfaces"),
   notify => Exec["restart-networking"],
