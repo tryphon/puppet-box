@@ -24,20 +24,21 @@ class network::dhcp::readonly {
   include network::dhcp
   include readonly::common
 
-
-  file { "/etc/dhcp3":
-    ensure => directory
-  } 
-  file { "/etc/dhcp3/dhclient.conf":
-    content => template("box/dhcp3/dhclient.conf"),
-    require => Package["dhcp3-client"] 
-  } 
-  file { "/etc/dhcp3/dhclient-script":
-    source => "puppet:///box/dhcp3/dhclient-script", 
-    require => Package["dhcp3-client"] 
-  } 
-
   include debian
+  if $debian::lenny {
+    file { "/etc/dhcp3":
+      ensure => directory
+    } 
+    file { "/etc/dhcp3/dhclient.conf":
+      content => template("box/dhcp3/dhclient.conf"),
+      require => Package["dhcp3-client"] 
+    } 
+    file { "/etc/dhcp3/dhclient-script":
+      source => "puppet:///box/dhcp3/dhclient-script", 
+      require => Package["dhcp3-client"] 
+    } 
+  }
+
   if $debian::lenny {
     readonly::mount_tmpfs { "/var/lib/dhcp3": }
   } else {
