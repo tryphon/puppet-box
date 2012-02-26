@@ -1,5 +1,9 @@
 #!/bin/sh
 mount -o remount,rw /boot
 trap "mount -o remount,ro /boot" EXIT
-cp /var/etc/puppet/manifests/config.pp /boot/config.pp
+
+stored_config="/boot/config.pp.`facter macaddress`"
+[ ! -f $stored_config ] && stored_config="/boot/config.pp"
+
+cp /var/etc/puppet/manifests/config.pp $stored_config
 sync

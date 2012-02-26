@@ -9,7 +9,11 @@ if [ "$1" = "boot" ]; then
     if [  ! -f "/var/etc/puppet/manifests/config.pp" ]; then
         mkdir -p "/var/etc/puppet/manifests"
         echo "Restore stored configuration"
-        cp "/boot/config.pp" "/var/etc/puppet/manifests/config.pp"
+
+        stored_config="/boot/config.pp.`facter macaddress`"
+        [ ! -f $stored_config ] && stored_config="/boot/config.pp"
+        
+        cp $stored_config "/var/etc/puppet/manifests/config.pp"
         chown www-data "/var/etc/puppet/manifests/config.pp"
     fi
 fi
