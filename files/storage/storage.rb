@@ -101,7 +101,7 @@ class Storage
 
     execute do |c|
       partitions = c.create_partitions disk_devices, "fd"
-      c.push "mdadm -C /dev/md0 -l 1 --raid-device=2 #{partitions.join(' ')}"
+      c.push "mdadm -C /dev/md0 -l 1 --raid-device=2 --metadata=0.90 #{partitions.join(' ')}"
       c.make2fs "/dev/md0", label
     end
   end
