@@ -45,6 +45,9 @@ class puppet {
   file { "/etc/puppet/manifests/classes/empty.pp":
     ensure => present
   }
+  file { "/etc/puppet/files":
+    ensure => directory
+  }
 
   file { "/etc/puppet/templates":
     ensure => directory,
@@ -92,6 +95,8 @@ class puppet {
 }
 
 class puppet::download-config {
+  include wget
+
   file { "/usr/local/sbin/download-puppet-config":
     source => "puppet:///box/puppet/download-puppet-config",
     mode => 755
