@@ -104,3 +104,11 @@ class network::wifi {
     require => Line["blacklist rt2800usb"]
   }
 }
+
+class network::vlan {
+  package { vlan: }
+}
+
+class network::iptables {
+  package { iptables: }
+}
