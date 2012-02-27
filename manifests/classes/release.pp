@@ -2,6 +2,15 @@ class release {
   include release::current
   include release::upgrade
   include release::gem
+  include release::conf
+}
+
+class release::conf {
+  file { "/etc/box": ensure => "/var/etc/box" }
+
+  file { "/etc/puppet/manifests/classes/release.pp":
+    source => "puppet:///box/release/manifest.pp",
+  }
 }
 
 class release::current {
@@ -21,7 +30,7 @@ class release::upgrade {
 }
 
 class release::gem {
-  ruby::gem { box-release: }
+  ruby::gem { box-release: ensure => latest }
 
   ruby::gem { SyslogLogger: require => Ruby::Gem[hoe] }
   ruby::gem { hoe: ensure => '2.8.0' }
