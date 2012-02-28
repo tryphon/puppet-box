@@ -1,5 +1,5 @@
 exec { "storage-init-<%= box_storage_name %>":
-  command => "/usr/local/sbin/storage init --label=<%= box_storage_name %> > /tmp/storage-<%= box_storage_name %>.log",
+  command => "/usr/local/sbin/storage init --label=<%= box_storage_name %> > /var/log/storage-<%= box_storage_name %>.log",
   tag => boot
 }
 
