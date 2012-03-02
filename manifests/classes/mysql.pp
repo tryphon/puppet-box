@@ -23,7 +23,8 @@ class mysql::server {
 
   file { "/var/lib/mysql":
     ensure => "/srv/$box_storage_name/mysql",
-    force => true
+    force => true,
+    require => Package[mysql-server]
   }
 
   file { "/etc/puppet/manifests/classes/mysql.pp":
