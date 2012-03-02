@@ -5,7 +5,21 @@ class mysql::server {
     before => Package["mysql-server"]
   }
 
-  package { "mysql-server": }
+  group { mysql:
+    gid => 2010
+  }
+
+  user { mysql:
+    uid => 2010,
+    gid => mysql,
+    home => "/var/lib/mysql",
+    require => Group[mysql],
+    shell => "/bin/false"
+  }
+
+  package { "mysql-server": 
+    require => [User[mysql], Group[mysql]]
+  }
 
   file { "/var/lib/mysql":
     ensure => "/srv/$box_storage_name/mysql",
