@@ -33,7 +33,7 @@ if [ $capture = "true" ]; then
     elif amixer controls | grep -q 'ADC Volume'; then
         # Looks like a M-Audio Delta 44 / 1010
         max_index=`amixer controls | grep 'ADC Volume' | sed -n 's/.*index=\([0-9]\)/\1/p' | sort | tail -1`
-        for (( index=1; index<=$max_index; index++ )) do
+        for (( index=0; index<=$max_index; index++ )) do
             amixer -- sset ADC,$index 0dB unmute
             amixer -- sset DAC,$index 0dB unmute
 
