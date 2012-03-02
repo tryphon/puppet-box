@@ -50,9 +50,17 @@ class alsa::mixer {
     content => template("box/alsa/amixerconf.default")
   }
 
-  exec { "update-rc.d-amixerconf":
-    command => "update-rc.d amixerconf start 51 S .",
-    require => File["/etc/init.d/amixerconf"],
-    creates => "/etc/rcS.d/S51amixerconf"
+  if $debian::lenny {
+    exec { "update-rc.d-amixerconf":
+      command => "update-rc.d amixerconf start 51 S .",
+      require => File["/etc/init.d/amixerconf"],
+      creates => "/etc/rcS.d/S51amixerconf"
+    }   
+  } else {
+    exec { "update-rc.d-amixerconf":
+      command => "insserv amixerconf",
+      require => File["/etc/init.d/amixerconf"],
+      unless => "ls /etc/rc?.d/S*amixerconf > /dev/null 2>&1"
+    }   
   }
 }
