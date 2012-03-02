@@ -112,3 +112,10 @@ class network::vlan {
 class network::iptables {
   package { iptables: }
 }
+
+class network::gateway {
+  line { "sysctl-ip4-forward":
+    line => "net.ipv4.ip_forward=1",
+    file => "/etc/sysctl.conf"
+  }
+}
