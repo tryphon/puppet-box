@@ -59,7 +59,7 @@ class alsa::mixer {
   } else {
     exec { "update-rc.d-amixerconf":
       command => "insserv amixerconf",
-      require => File["/etc/init.d/amixerconf"],
+      require => [File["/etc/init.d/amixerconf"], Exec["update-rc.d-puppet-boot"]],
       unless => "ls /etc/rc?.d/S*amixerconf > /dev/null 2>&1"
     }   
   }
