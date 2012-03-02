@@ -3,6 +3,8 @@
 capture=true
 playback=false
 
+logger -i -t "amixerconf" "Configure sound card mixer for $1"
+
 case $1 in
     playback)
         capture=false
@@ -29,25 +31,19 @@ if [ $capture = "true" ]; then
         amixer -- sset 'Input Source' 'Line'
         amixer -- sset 'Capture' 0dB cap
     elif amixer controls | grep -q 'ADC Volume'; then
-    # Looks like a M-Audio Delta 44
-        amixer -- sset ADC,0 0dB unmute
-        amixer -- sset ADC,1 0dB unmute
-        amixer -- sset ADC,2 0dB unmute
-        amixer -- sset ADC,3 0dB unmute
-        amixer -- sset DAC,0 0dB unmute
-        amixer -- sset DAC,1 0dB unmute
-        amixer -- sset DAC,2 0dB unmute
-        amixer -- sset DAC,3 0dB unmute
+        # Looks like a M-Audio Delta 44 / 1010
+        max_index=`amixer controls | grep 'ADC Volume' | sed -n 's/.*index=\([0-9]\)/\1/p' | sort | tail -1`
+        for (( index=1; index<=$max_index; index++ )) do
+            amixer -- sset ADC,$index 0dB unmute
+            amixer -- sset DAC,$index 0dB unmute
 
-        if [ $playback != "true" ]; then
-        # Loopback inputs
-            amixer -- sset 'H/W',0 'H/W In 0'
-            amixer -- sset 'H/W',1 'H/W In 1'
-            amixer -- sset 'H/W',2 'H/W In 2'
-            amixer -- sset 'H/W',3 'H/W In 3'
-        fi
+            if [ $playback != "true" ]; then
+              # Loopback inputs
+              amixer -- sset 'H/W',$index "H/W In $index"
+            fi
+        done
     elif [ `cat /proc/asound/card0/id` = "Juli" ]; then
-    # It is a Juli@ card
+        # It is a Juli@ card
         # Inputs are always ON and their gain cannot be controled
         if [ $playback != "true" ]; then
         # Loopback inputs
