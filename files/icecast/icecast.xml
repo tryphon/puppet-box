@@ -1,6 +1,6 @@
 <icecast>
     <limits>
-        <clients><%= icecast_clients %></clients>
+        <clients><%= has_variable?("icecast_clients") ? icecast_clients : 3 %></clients>
         <sources>4</sources>
         <threadpool>5</threadpool>
         <queue-size>524288</queue-size>
