@@ -42,7 +42,7 @@ class apt::backport {
   if $debian::lenny {
     apt::source { lenny-backports: 
       key => "16BA136C",
-      content => "deb http://backports.debian.org/debian-backports ${debian::release}-backports main contrib non-free"
+      content => "deb http://archive.debian.org/debian-backports ${debian::release}-backports main contrib non-free"
     }
   }
 }
