@@ -12,7 +12,8 @@ file { "/var/etc/network/interfaces":
 }
 
 exec { "restart-networking": 
-  command => "/sbin/ifdown eth0 && /sbin/ifup eth0",
+  # Puppet runs this command even if tag boot is not defined
+  command => '[ "$PUPPET_BOOT" != "true" ] && /sbin/ifdown eth0 && /sbin/ifup eth0',
   refreshonly => true
 }
 
