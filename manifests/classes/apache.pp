@@ -52,3 +52,16 @@ class apache::syslog {
     require => Package[apache]
   }
 }
+
+class apache::xsendfile {
+  package { libapache2-mod-xsendfile: 
+    require => Package[apache]
+  }
+
+  if $debian::lenny {
+    apt::source::pin { libapache2-mod-xsendfile:
+      source => "lenny-backports",
+      before => Package[libapache2-mod-xsendfile]
+    }
+  }
+}
