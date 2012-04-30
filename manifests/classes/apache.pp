@@ -59,6 +59,9 @@ class apache::xsendfile {
   }
 
   if $debian::lenny {
+    Package[libapache2-mod-xsendfile] {
+      ensure => "0.12-1~bpo50+1"
+    }
     apt::source::pin { libapache2-mod-xsendfile:
       source => "lenny-backports",
       before => Package[libapache2-mod-xsendfile]
