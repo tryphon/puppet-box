@@ -19,13 +19,21 @@ class munin {
     source => "puppet:///box/munin/apache.conf"
   }
 
-  define plugin($script = '', $config = false) {
+  define plugin($script = '', $config = false, $source = false) {
     $real_script = $script ? {
       '' => $name,
       default => $script
     }
     file { "/etc/munin/plugins.model/$name":
       ensure => "/usr/share/munin/plugins/$real_script"
+    }
+
+    if $source {
+      file { "/usr/share/munin/plugins/$real_script":
+        source => $source,
+        require => Package["munin-node"],
+        mode => 755
+      }
     }
 
     if $config {
@@ -95,4 +103,8 @@ class munin::manifests {
   file { "/etc/puppet/manifests/classes/munin.pp":
     source => "puppet:///box/munin/manifest.pp"
   }
+}
+
+class munin::ruby {
+  ruby::gem { munin-plugin: ensure => latest }
 }
