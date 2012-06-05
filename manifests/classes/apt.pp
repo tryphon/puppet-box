@@ -52,6 +52,6 @@ class apt::multimedia {
 
   apt::source { debian-multimedia: 
     key => "1F41B907",
-    content => "deb http://www.debian-multimedia.org $debian::release main non-free"
+    content => "deb http://debian-multimedia.tryphon.eu $debian::release main non-free"
   }
 }
