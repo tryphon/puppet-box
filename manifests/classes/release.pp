@@ -57,6 +57,6 @@ class release::cron {
 
   file { "/etc/cron.d/box-release":
     content => "30 *    * * *   root	$cron_command\n",
-    require => Package[box-release]
+    require => [Package[box-release], Package[cron]]
   }
 }
