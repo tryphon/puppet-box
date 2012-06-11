@@ -28,3 +28,7 @@ class ruby::gems::tryphon {
     unless => "gem source --list | grep $tryphon_repository"
   }
 }
+
+class ruby::gems::dependencies {
+  package { [ruby-dev, build-essential]: }
+}

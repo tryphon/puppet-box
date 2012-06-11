@@ -1,0 +1,66 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'  
+
+require 'munin'
+require 'rsox-command'
+
+module Pige
+
+  def self.file(time, format = "wav")
+    int_time = time.to_i
+    truncated_time = Time.at(int_time - int_time%300).utc
+
+    # on start, the filename is like : /srv/pige/records/2012/05-May/30-Wed/06h32m34.wav
+    last_exact_time_file = Dir[truncated_time.strftime("/srv/pige/records/%Y/%m-%b/%d-%a/%Hh%Mm*.#{format}").gsub(/0m/,"{0,1,2,3,4}m").gsub(/5m/,"{5,6,7,8,9}m")].sort.last
+
+    if last_exact_time_file and File.exists?(last_exact_time_file)
+      last_exact_time_file 
+    else
+      truncated_time.strftime("/srv/pige/records/%Y/%m-%b/%d-%a/%Hh%M.#{format}")
+    end
+  end
+
+  def self.current_file
+    file Time.now
+  end
+
+  def self.last_file
+    file(Time.now - 300)
+  end
+
+end
+
+class LastFileStatsPlugin < Munin::Plugin
+
+  def initialize
+    super
+
+    declare_field :peak, :label => "Peak level dB", :type => :gauge, :min => -100, :max => 0
+    declare_field :rms, :label => "RMS level dB", :type => :gauge, :min => -100, :max => 0, :draw => "LINE2"
+
+    @@graph_options[:info] = "This graph shows record audio levels"
+    @@graph_options[:vlabel] = "dBFS"
+    @@graph_options[:args] = "--lower-limit -100 --upper-limit 0"
+    @@graph_options[:scale] = "no"
+  end
+  
+  graph_attributes "Record Audio Levels", :category => 'record'
+
+  def stats
+    @stats ||= Sox::Stats.new(Pige.last_file, :use_cache => true)
+  end
+  
+  def retrieve_values
+    { :peak => stats.peak_level, :rms => stats.rms_level }
+  rescue => e
+    $stderr.puts "Can't read levels from #{Pige.last_file}: #{e}"
+    {}
+  end
+
+end
+
+LastFileStatsPlugin.new.run
+
+
+        

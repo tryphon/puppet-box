@@ -7,3 +7,7 @@ class sox {
     require => [Apt::Source[tryphon], Apt::Source[debian-multimedia]] 
   }
 }
+
+class sox::ruby {
+  ruby::gem { rsox-command: ensure => latest }
+}

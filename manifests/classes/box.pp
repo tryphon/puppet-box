@@ -22,6 +22,7 @@ class box {
   include release
   include issue
 
+  include steto
   include munin::all
 
   include ntp::readonly
