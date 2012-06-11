@@ -39,6 +39,7 @@ class syslog {
   }
   readonly::mount_tmpfs { "/etc/rsyslog.d/runtime": }
 
+  include rsyslog::steto
 }
 
 class rsyslog::module::file {
@@ -52,5 +53,11 @@ class rsyslog::server {
   file { "/etc/rsyslog.d/udp-server.conf":
     content => "\$ModLoad imudp\n\$UDPServerRun 514\n",
     require => Package[rsyslog]
+  }
+}
+
+class rsyslog::steto {
+  steto::conf { syslog: 
+    source => "puppet:///box/syslog/steto.rb"
   }
 }

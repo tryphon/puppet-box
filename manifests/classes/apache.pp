@@ -15,6 +15,14 @@ class apache {
     owner => root, 
     group => adm
   }
+
+  include apache::steto
+}
+
+class apache::steto {
+  steto::conf { apache: 
+    source => "puppet:///box/apache/steto.rb"
+  }
 }
 
 class apache::passenger {
