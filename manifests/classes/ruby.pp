@@ -16,4 +16,15 @@ class ruby::gems {
   } else {
     package { rubygems: }
   }
+
+  include ruby::gems::tryphon
+}
+
+class ruby::gems::tryphon {
+  $tryphon_repository = "http://download.tryphon.eu/rubygems/"
+
+  exec { "gem-source-tryphon":
+    command => "gem source --add $tryphon_repository",
+    unless => "gem source --list | grep $tryphon_repository"
+  }
 }

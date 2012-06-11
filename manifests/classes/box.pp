@@ -28,6 +28,28 @@ class box {
 
   include lshw
   include hal
+
+  include box::gem
+}
+
+class box::gem {
+  file { "/etc/box": ensure => directory }
+
+  ruby::gem { box: ensure => "0.0.1" }
+
+  file { "/usr/local/sbin/box": 
+    ensure => "/var/lib/gems/1.8/bin/box"
+  }
+
+  file { "/etc/cron.d/box":
+    content => "*/5 *    * * *   root	/usr/local/sbin/box sync\n",
+    require => Package[cron]
+  }
+
+  file { "/etc/box/registration_secret":
+    content => "secret",
+    mode => 600
+  }
 }
 
 class box::audio {
