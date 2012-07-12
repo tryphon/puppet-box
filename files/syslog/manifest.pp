@@ -8,7 +8,8 @@ file { "/etc/rsyslog.d/runtime/server.conf":
     default => present
   },
   content => "*.*             @${syslog_server}\n",
-  notify => Service[rsyslog]
+  notify => Service[rsyslog],
+  tag => boot
 }
 
 service { rsyslog: 
