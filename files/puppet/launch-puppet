@@ -4,6 +4,7 @@ options="--logdest syslog"
 if [ "$1" = "boot" ]; then
     exec > /var/log/launch-puppet-boot.log 2>&1
 
+    export PUPPET_BOOT=true
     options="--logdest console --tags boot --color false"
 
     if [  ! -f "/var/etc/puppet/manifests/config.pp" ]; then

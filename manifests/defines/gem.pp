@@ -3,7 +3,7 @@ define ruby::gem($ensure = "installed") {
 
   package { $name: 
     provider => gem, 
-    ensure => $ensure, 
+    ensure => $ensure,
     require => Package[rubygems] 
   }
 }

@@ -17,3 +17,7 @@ class ruby::gems {
     package { rubygems: }
   }
 }
+
+class ruby::gems::dependencies {
+  package { [ruby-dev, build-essential]: }
+}

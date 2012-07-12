@@ -42,7 +42,7 @@ class apt::backport {
   if $debian::lenny {
     apt::source { lenny-backports: 
       key => "16BA136C",
-      content => "deb http://backports.debian.org/debian-backports ${debian::release}-backports main contrib non-free"
+      content => "deb http://archive.debian.org/debian-backports ${debian::release}-backports main contrib non-free"
     }
   }
 }
@@ -52,6 +52,6 @@ class apt::multimedia {
 
   apt::source { debian-multimedia: 
     key => "1F41B907",
-    content => "deb http://www.debian-multimedia.org $debian::release main non-free"
+    content => "deb http://debian-multimedia.tryphon.eu $debian::release main non-free"
   }
 }

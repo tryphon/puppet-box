@@ -15,6 +15,14 @@ class apache {
     owner => root, 
     group => adm
   }
+
+  include apache::steto
+}
+
+class apache::steto {
+  steto::conf { apache: 
+    source => "puppet:///box/apache/steto.rb"
+  }
 }
 
 class apache::passenger {
@@ -50,5 +58,21 @@ class apache::syslog {
     command => "adduser www-data adm",
     unless => "grep '^adm:.*www-data' /etc/group",
     require => Package[apache]
+  }
+}
+
+class apache::xsendfile {
+  package { libapache2-mod-xsendfile: 
+    require => Package[apache]
+  }
+
+  if $debian::lenny {
+    Package[libapache2-mod-xsendfile] {
+      ensure => "0.12-1~bpo50+1"
+    }
+    apt::source::pin { libapache2-mod-xsendfile:
+      source => "lenny-backports",
+      before => Package[libapache2-mod-xsendfile]
+    }
   }
 }
