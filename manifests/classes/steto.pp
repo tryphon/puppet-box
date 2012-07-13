@@ -14,6 +14,7 @@ class steto {
   }
   file { "/etc/cron.d/steto":
     content => "* *    * * *   root	/usr/local/sbin/steto-cron\n",
+    require => Package[cron]
   }
 
   file { "/var/lib/steto":
