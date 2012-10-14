@@ -29,13 +29,14 @@ class box {
 
   include lshw
   include hal
+
+  include box::user
 }
 
 class box::audio {
   include alsa::common
   include alsa::readonly
   include alsa::mixer
-  include box::user
 }
 
 class box::storage {
