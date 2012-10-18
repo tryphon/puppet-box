@@ -2,7 +2,7 @@ class steto {
   include ruby::gems
   include ruby::gems::dependencies
 
-  ruby::gem { steto: ensure => "0.0.6", require => Package[ruby-dev] }
+  ruby::gem { steto: ensure => "0.0.7", require => Package[ruby-dev] }
 
   package { [nagios-plugins-basic, nagios-plugins-standard, beep, dnsutils]: }
 
