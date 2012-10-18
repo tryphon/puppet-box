@@ -36,7 +36,7 @@ class box {
 class box::gem {
   file { "/etc/box": ensure => directory }
 
-  ruby::gem { box: ensure => "0.0.1" }
+  ruby::gem { box: ensure => "0.0.2" }
 
   file { "/usr/local/sbin/box": 
     ensure => "/var/lib/gems/1.8/bin/box"
