@@ -26,12 +26,12 @@ class apt::tryphon {
   if $debian::lenny {
     apt::source { tryphon: 
       key => "C6ADBBD5",
-      content => "deb http://debian.tryphon.org ${debian::release}-backports main contrib\ndeb http://debian.tryphon.org $debian::release main contrib"
+      content => "deb http://debian.tryphon.eu ${debian::release}-backports main contrib\ndeb http://debian.tryphon.eu $debian::release main contrib"
     }
   } else {
     apt::source { tryphon: 
       key => "C6ADBBD5",
-      content => "deb http://debian.tryphon.org $debian::release main contrib"
+      content => "deb http://debian.tryphon.eu $debian::release main contrib"
     }
   }
 }

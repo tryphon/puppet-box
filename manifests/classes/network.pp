@@ -6,6 +6,10 @@ class network {
   include network::resolvconf
   include network::resolvconf::readonly
   include network::wifi
+
+  steto::conf { "network": 
+    source => "puppet:///box/network/steto.rb"
+  }
 }
 
 class network::base {

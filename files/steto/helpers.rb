@@ -1,3 +1,6 @@
+require 'yaml'
+require 'facter'
+
 class Object
 
   def blank?
@@ -32,13 +35,28 @@ class Numeric
 
 end
 
-Steto.config do
-  def process(name)
-    nagios "process_#{name}", "check_procs", :critical => "1:", :command => name
+class Box
+
+  def release
+    @release ||= YAML.load(IO.read("/boot/current.yml"))["name"]
   end
+
+  def name
+    @name ||= release.split("-").first
+  end
+  
 end
 
-require 'yaml'
+Steto.config do
+  def process(process_name, name = nil)
+    name ||= "#{process_name.gsub('-','_')}_process"
+    nagios name, "check_procs", :critical => "1:", :command => process_name
+  end
+
+  def box
+    @box ||= Box.new
+  end
+end
 
 class JSONReporter
 
