@@ -63,6 +63,15 @@ class box::storage {
   file { "/etc/puppet/manifests/classes/storage-${box_storage_name}.pp":
     content => template("box/storage/manifest.pp")
   }
+
+  steto::conf { "storage": 
+    source => "puppet:///box/storage/steto.rb"
+  }
+
+  steto::conf { "storage9-$box_storage_name": 
+    content => "StorageCheck.new(:$box_storage_name).config(Steto.config)\n"
+  }
+
 }
 
 class box::user {
