@@ -4,6 +4,7 @@ define ruby::gem($ensure = "installed") {
   package { $name: 
     provider => gem, 
     ensure => $ensure,
-    require => Package[rubygems] 
+    require => Package[rubygems],
+    notify => Exec["rubygems-fix-date-format"]
   }
 }

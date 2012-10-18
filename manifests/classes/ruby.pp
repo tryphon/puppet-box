@@ -16,6 +16,11 @@ class ruby::gems {
   } else {
     package { rubygems: }
   }
+
+  exec { "rubygems-fix-date-format":
+    command => 'sed -i "s/ 00:00:00.000000000Z//" /var/lib/gems/1.8/specifications/*.gemspec',
+    refreshonly => true
+  }
 }
 
 class ruby::gems::dependencies {
