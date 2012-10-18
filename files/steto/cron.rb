@@ -3,11 +3,18 @@
 require 'rubygems'
 require 'steto'
 
-require 'syslog_logger'
+begin
+  require 'syslog/logger'
+rescue LoadError
+  require 'syslog_logger'
+  module Syslog
+    Logger = SyslogLogger
+  end
+end
 
 module Steto
 
-  @@logger = SyslogLogger.new('steto')
+  @@logger = Syslog::Logger.new('steto')
   def self.logger
     @@logger
   end
