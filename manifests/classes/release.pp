@@ -6,7 +6,7 @@ class release {
 }
 
 class release::conf {
-  file { "/etc/box": ensure => "/var/etc/box" }
+  file { "/etc/box/release.conf": ensure => "/var/etc/box/release.conf" }
 
   file { "/etc/puppet/manifests/classes/release.pp":
     source => "puppet:///box/release/manifest.pp",
