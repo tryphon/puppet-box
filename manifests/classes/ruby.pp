@@ -14,7 +14,17 @@ class ruby::gems {
       require => Apt::Source[tryphon]
     }
   } else {
-    package { rubygems: }
+    include apt::backport
+
+    package { rubygems: 
+      ensure => "1.8.15-1~bpo60+1",
+      require => Apt::Source::Pin[rubygems]
+    }
+
+    apt::source::pin { rubygems:
+      source => "squeeze-backports",
+      require => Apt::Source[tryphon]
+    }
   }
 
   exec { "rubygems-fix-date-format":
