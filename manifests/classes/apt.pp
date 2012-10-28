@@ -44,6 +44,10 @@ class apt::backport {
       key => "16BA136C",
       content => "deb http://archive.debian.org/debian-backports ${debian::release}-backports main contrib non-free"
     }
+  } else {
+    apt::source { squeeze-backports:
+      content => "deb http://backports.debian.org/debian-backports squeeze-backports main contrib non-free"
+    }
   }
 }
 
