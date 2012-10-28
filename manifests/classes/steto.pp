@@ -4,7 +4,8 @@ class steto {
 
   ruby::gem { steto: ensure => "0.0.7", require => Package[ruby-dev] }
 
-  package { [nagios-plugins-basic, nagios-plugins-standard, beep, dnsutils]: }
+  include network::dnsutils
+  package { [nagios-plugins-basic, nagios-plugins-standard, beep]: }
 
   file { ["/etc/steto", "/etc/steto/conf.d"]:
     ensure => directory

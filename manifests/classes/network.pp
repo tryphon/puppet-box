@@ -123,3 +123,7 @@ class network::gateway {
     file => "/etc/sysctl.conf"
   }
 }
+
+class network::dnsutils {
+  package { dnsutils: }
+}
