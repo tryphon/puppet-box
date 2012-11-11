@@ -47,3 +47,7 @@ class ruby::gems::tryphon {
 class ruby::gems::dependencies {
   package { [ruby-dev, build-essential]: }
 }
+
+class ruby::bundler {
+  ruby::gem { bundler: }
+}
