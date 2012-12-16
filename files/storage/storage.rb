@@ -170,7 +170,6 @@ class Storage
 
   end
 
-
 end
 
 exit (Storage.new(@label).check ? 0 : 1)
