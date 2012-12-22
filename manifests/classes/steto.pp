@@ -2,8 +2,10 @@ class steto {
   include ruby::gems
   include ruby::gems::dependencies
 
-  ruby::gem { steto: ensure => latest }
-  package { ["nagios-plugins-basic", "nagios-plugins-standard", "beep"]: }
+  ruby::gem { steto: ensure => "0.0.7", require => Package[ruby-dev] }
+
+  include network::dnsutils
+  package { [nagios-plugins-basic, nagios-plugins-standard, beep]: }
 
   file { ["/etc/steto", "/etc/steto/conf.d"]:
     ensure => directory
@@ -22,10 +24,19 @@ class steto {
   }
   readonly::mount_tmpfs { "/var/lib/steto": }
 
-  define conf($source) {
+  define conf($source = '', $content = '') {
     file { "/etc/steto/conf.d/${name}.rb":
-      source => $source,
       require => File["/etc/steto/conf.d"]
+    }
+
+    if $source != '' { 
+      File["/etc/steto/conf.d/${name}.rb"] {
+        source => $source
+      }
+    } else {
+      File["/etc/steto/conf.d/${name}.rb"] {
+        content => $content
+      }
     }
   }
 

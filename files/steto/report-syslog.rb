@@ -1,10 +1,8 @@
-require 'syslog_logger'
-
 class SyslogReporter
   attr_accessor :logger
 
   def logger
-    @logger ||= SyslogLogger.new("steto")
+    @logger ||= Syslog::Logger.new("steto")
   end
 
   def report(checks)

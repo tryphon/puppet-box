@@ -6,7 +6,7 @@ class release {
 }
 
 class release::conf {
-  file { "/etc/box": ensure => "/var/etc/box" }
+  file { "/etc/box/release.conf": ensure => "/var/etc/box/release.conf" }
 
   file { "/etc/puppet/manifests/classes/release.pp":
     source => "puppet:///box/release/manifest.pp",
@@ -26,6 +26,10 @@ class release::upgrade {
   }
   sudo::line { "www-data-box-upgrade":
     line => "www-data	ALL=(root) NOPASSWD: /usr/local/sbin/box-upgrade"
+  }
+
+  steto::conf { release-upgrade: 
+    source => "puppet:///box/release/steto.rb"
   }
 }
 

@@ -9,4 +9,8 @@ class ssh {
     "/root/.ssh": 
     ensure => directory, mode => 700;
   }
+
+  steto::conf { "ssh": 
+    source => "puppet:///box/ssh/steto.rb"
+  }
 }

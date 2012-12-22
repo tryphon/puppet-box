@@ -6,6 +6,10 @@ class network {
   include network::resolvconf
   include network::resolvconf::readonly
   include network::wifi
+
+  steto::conf { "network": 
+    source => "puppet:///box/network/steto.rb"
+  }
 }
 
 class network::base {
@@ -118,4 +122,8 @@ class network::gateway {
     line => "net.ipv4.ip_forward=1",
     file => "/etc/sysctl.conf"
   }
+}
+
+class network::dnsutils {
+  package { dnsutils: }
 }

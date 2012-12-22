@@ -22,15 +22,23 @@ define apt::key($ensure = present, $source) {
   }
 }
 
-define apt::source($key, $content) {
-  apt::key { $key:
-    source => "puppet:///box/apt/$name.key"
-  }
+define apt::source($key = false, $content) {
   file { "/etc/apt/sources.list.d/$name.list":
     content => $content,
-    require => Apt::Key[$key],
     notify => Exec["apt-get-update-for-source-${name}"]
   } 
+
+  if $key {
+    notice("key: '$key'")
+    apt::key { $key:
+      source => "puppet:///box/apt/$name.key"
+    } 
+
+    File["/etc/apt/sources.list.d/$name.list"] {
+      require => Apt::Key[$key]
+    }
+  }
+
   exec { "apt-get-update-for-source-${name}":
     command => "apt-get update",
     refreshonly => true

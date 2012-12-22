@@ -44,7 +44,7 @@ class darkice::full {
   include apt::tryphon
 
   package { darkice-full: 
-    ensure => "1.0-0.0~bpo50+1",
+    ensure => "1.2+svn506-1",
     alias => darkice,
     require => [Apt::Source[tryphon], Apt::Source[debian-multimedia]]
   }

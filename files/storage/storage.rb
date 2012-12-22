@@ -112,7 +112,7 @@ class Storage
     disk_device = blank_disks.first
     unless disk_device
       log "Raid is degraded and no blank disk is available"
-      return false
+      return true
     end
 
     log "Insert #{disk_device} into raid storage"

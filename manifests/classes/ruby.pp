@@ -14,10 +14,40 @@ class ruby::gems {
       require => Apt::Source[tryphon]
     }
   } else {
-    package { rubygems: }
+    include apt::backport
+
+    package { rubygems: 
+      ensure => "1.8.15-1~bpo60+1",
+      require => Apt::Source::Pin[rubygems]
+    }
+
+    apt::source::pin { rubygems:
+      source => "squeeze-backports",
+      require => Apt::Source[tryphon]
+    }
+  }
+
+  exec { "rubygems-fix-date-format":
+    command => 'sed -i "s/ 00:00:00.000000000Z//" /var/lib/gems/1.8/specifications/*.gemspec',
+    refreshonly => true
+  }
+
+  include ruby::gems::tryphon
+}
+
+class ruby::gems::tryphon {
+  $tryphon_repository = "http://download.tryphon.eu/rubygems/"
+
+  exec { "gem-source-tryphon":
+    command => "gem source --add $tryphon_repository",
+    unless => "gem source --list | grep $tryphon_repository"
   }
 }
 
 class ruby::gems::dependencies {
   package { [ruby-dev, build-essential]: }
+}
+
+class ruby::bundler {
+  ruby::gem { bundler: }
 }

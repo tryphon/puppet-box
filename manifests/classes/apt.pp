@@ -26,12 +26,12 @@ class apt::tryphon {
   if $debian::lenny {
     apt::source { tryphon: 
       key => "C6ADBBD5",
-      content => "deb http://debian.tryphon.org ${debian::release}-backports main contrib\ndeb http://debian.tryphon.org $debian::release main contrib"
+      content => "deb http://debian.tryphon.eu ${debian::release}-backports main contrib\ndeb http://debian.tryphon.eu $debian::release main contrib"
     }
   } else {
     apt::source { tryphon: 
       key => "C6ADBBD5",
-      content => "deb http://debian.tryphon.org $debian::release main contrib"
+      content => "deb http://debian.tryphon.eu $debian::release main contrib"
     }
   }
 }
@@ -43,6 +43,10 @@ class apt::backport {
     apt::source { lenny-backports: 
       key => "16BA136C",
       content => "deb http://archive.debian.org/debian-backports ${debian::release}-backports main contrib non-free"
+    }
+  } else {
+    apt::source { squeeze-backports:
+      content => "deb http://backports.debian.org/debian-backports squeeze-backports main contrib non-free"
     }
   }
 }

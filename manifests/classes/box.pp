@@ -29,13 +29,31 @@ class box {
 
   include lshw
   include hal
+
+  include box::gem
+  include box::user
+}
+
+class box::gem {
+  file { "/etc/box": ensure => directory }
+
+  ruby::gem { box: ensure => "0.0.3" }
+
+  file { "/etc/cron.d/box":
+    content => "*/5 *    * * *   root	/usr/local/bin/box sync\n",
+    require => Package[cron]
+  }
+
+  file { "/etc/box/registration_secret":
+    content => "secret",
+    mode => 600
+  }
 }
 
 class box::audio {
   include alsa::common
   include alsa::readonly
   include alsa::mixer
-  include box::user
 }
 
 class box::storage {
@@ -63,6 +81,15 @@ class box::storage {
   file { "/etc/puppet/manifests/classes/storage-${box_storage_name}.pp":
     content => template("box/storage/manifest.pp")
   }
+
+  steto::conf { "storage": 
+    source => "puppet:///box/storage/steto.rb"
+  }
+
+  steto::conf { "storage9-$box_storage_name": 
+    content => "StorageCheck.new(:$box_storage_name).config(Steto.config)\n"
+  }
+
 }
 
 class box::user {
