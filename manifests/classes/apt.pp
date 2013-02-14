@@ -10,9 +10,12 @@ class apt {
   Package {
     require => Exec["apt-get_update"]
   }
-  concatenated_file { "/etc/apt/preferences":
-    dir => "/etc/apt/preferences.d",
-    before  => Exec["apt-get_update"]
+
+  if $debian::lenny {
+    concatenated_file { "/etc/apt/preferences":
+      dir => "/etc/apt/preferences.d",
+      before  => Exec["apt-get_update"]
+    }
   }
 
   file { "/etc/apt/apt.conf.d/02recommended-suggested":
