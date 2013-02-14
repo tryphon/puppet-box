@@ -29,7 +29,7 @@ if [ "$1" = "boot" ]; then
     exec 1>&5 5>&-       # Restore stout.
     exec 2>&6 6>&-       # Restore sterr.
 
-    if grep -q "err:" /var/log/launch-puppet-boot.log; then
+    if [ $puppet_error_level != 0 ] || grep -q "err:" /var/log/launch-puppet-boot.log; then
         echo ""
         echo "Errors during puppet configuration :"
         grep "err:" /var/log/launch-puppet-boot.log
