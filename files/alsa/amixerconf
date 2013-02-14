@@ -24,6 +24,8 @@ case $1 in
         ;;
 esac
 
+CARD_ID=`cat /proc/asound/card0/id`
+
 if [ $capture = "true" ]; then
     if amixer controls | grep -q 'Input Source'; then
     # Looks like a Realtek ALC887 mixer
@@ -42,7 +44,7 @@ if [ $capture = "true" ]; then
               amixer -- sset 'H/W',$index "H/W In $index"
             fi
         done
-    elif [ `cat /proc/asound/card0/id` = "Juli" ]; then
+    elif [ $CARD_ID = "Juli" ]; then
         # It is a Juli@ card
         # Inputs are always ON and their gain cannot be controled
         if [ $playback != "true" ]; then
@@ -50,7 +52,7 @@ if [ $capture = "true" ]; then
             amixer -- sset 'H/W',0 'H/W In 0'
             amixer -- sset 'H/W',1 'H/W In 1'
         fi
-    elif [ `cat /proc/asound/card0/id` = "Live" ];then
+    elif [ $CARD_ID = "Live" ];then
     #It is a SoundBlaster Live!
         amixer -- sset 'AC97' cap 0dB
         amixer -- sset 'Line' cap
@@ -67,5 +69,9 @@ if [ $playback = "true" ]; then
       # TODO support 4 channels  
       amixer -- sset 'H/W',0 'PCM Out'
       amixer -- sset 'H/W',1 'PCM Out'
+    elif [ $CARD_ID = "Audio" ]; then
+      # Looks like a PlayBox
+      amixer -- sset 'Headphone' 100% unmute
+      amixer -- sset 'PCM' 0dB unmute
     fi
 fi
