@@ -60,20 +60,31 @@ define apt::source::pin($source, $release = false) {
 }
 
 define apt::preferences($ensure="present", $package, $pin, $priority) {
-  concatenated_file_part { $name:
-    ensure  => $ensure,
-    dir    => "/etc/apt/preferences.d",
-    content => "# file managed by puppet
+  if $debian::lenny {
+    concatenated_file_part { $name:
+      ensure  => $ensure,
+      dir    => "/etc/apt/preferences.d",
+      content => "# file managed by puppet
 Package: $package
 Pin: $pin
 Pin-Priority: $priority
 ",
-    notify => Exec["update-apt-preferences-for-$name"]
+      notify => Exec["update-apt-preferences-for-$name"]
+    }
+    # OPTIMIZE same action than exec { "concat_${name}" }
+    # Ensure that apt/preferences file is updated now
+    exec { "update-apt-preferences-for-$name":
+      command => "/usr/bin/find /etc/apt/preferences.d -maxdepth 1 -type f ! -name '*puppettmp' -print0 | sort -z | xargs -0 cat >| /etc/apt/preferences",
+      refreshonly => true
+    } 
+  } else {
+    file { "/etc/apt/preferences.d/$name":
+      content => "# file managed by puppet
+Package: $package
+Pin: $pin
+Pin-Priority: $priority
+"
+    }
   }
-  # OPTIMIZE same action than exec { "concat_${name}" }
-  # Ensure that apt/preferences file is updated now
-  exec { "update-apt-preferences-for-$name":
-    command => "/usr/bin/find /etc/apt/preferences.d -maxdepth 1 -type f ! -name '*puppettmp' -print0 | sort -z | xargs -0 cat >| /etc/apt/preferences",
-    refreshonly => true
-  } 
+    
 }
