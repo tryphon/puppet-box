@@ -32,21 +32,44 @@ class box {
 
   include box::gem
   include box::user
+  include box::conf
 }
 
 class box::gem {
   file { "/etc/box": ensure => directory }
 
-  ruby::gem { box: ensure => "0.0.3" }
+  ruby::gem { tryphon-box: ensure => latest }
+  ruby::gem { SyslogLogger: ensure => "2.0" }
 
   file { "/etc/cron.d/box":
-    content => "*/5 *    * * *   root	/usr/local/bin/box sync\n",
+    content => "*/5 *    * * *   root	/usr/local/bin/box provisioning sync\n",
     require => Package[cron]
   }
 
   file { "/etc/box/registration_secret":
     content => "secret",
     mode => 600
+  }
+}
+
+class box::conf {
+  file { "/etc/box/config.rb": 
+    content => template("box/box/config.rb")
+  }
+
+  # Contains customized config for the Box
+  file { "/etc/box/local.d/":
+    ensure => directory
+  }
+
+  # Contains customized config at runtime
+  file { "/etc/box/local.rb": ensure => "/var/etc/box/local.rb" }
+
+  file { "/etc/puppet/manifests/classes/box-config.pp":
+    source => "puppet:///box/box/manifest.pp",
+  }
+  file { "/etc/puppet/templates/config-local.rb":
+    source => "puppet:///box/box/config-local.rb",
   }
 }
 
