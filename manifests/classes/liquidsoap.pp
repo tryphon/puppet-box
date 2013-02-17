@@ -14,6 +14,7 @@ class liquidsoap {
   }
 
   include sox
+  package { [flac, faad, mplayer]: }
 
   exec { "add-liquidsoap-user-to-audio-group":
     command => "adduser liquidsoap audio",
