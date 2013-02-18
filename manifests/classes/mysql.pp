@@ -35,4 +35,9 @@ class mysql::server {
     content => "[mysqld]\nbind-address          = 0.0.0.0\n",
     require => Package["mysql-server"]
   }
+
+  file { "/etc/mysql/conf.d/max-connections.cnf":
+    content => "[mysqld]\nmax_connections        = 200\n",
+    require => Package["mysql-server"]
+  }
 }
