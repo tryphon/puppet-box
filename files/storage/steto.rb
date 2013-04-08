@@ -63,7 +63,7 @@ Steto.config do
   nagios "disks_free_space", "check_disk", :warning => 10, :critical => 5, :x => '/'
 
   def storage_raid?
-    @storage_raid ||= Dir["/dev/md[0-9]"].present?
+    @storage_raid ||= Dir["/dev/md[0-9]*"].present?
   end
 
   if storage_raid?
