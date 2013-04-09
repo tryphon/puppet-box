@@ -62,14 +62,18 @@ class apache::syslog {
 }
 
 class apache::xsendfile {
+  $release = $debian::release ? {
+    lenny => "0.12-1~bpo50+1",
+    squeeze => "0.12-1~bpo60+2",
+    default => "latest"
+  }
+
   package { libapache2-mod-xsendfile: 
-    require => Package[apache]
+    require => Package[apache],
+    ensure => "$release"
   }
 
   if $debian::lenny {
-    Package[libapache2-mod-xsendfile] {
-      ensure => "0.12-1~bpo50+1"
-    }
     apt::source::pin { libapache2-mod-xsendfile:
       source => "lenny-backports",
       before => Package[libapache2-mod-xsendfile]
