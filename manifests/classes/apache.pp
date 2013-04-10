@@ -69,7 +69,7 @@ class apache::xsendfile {
   }
 
   package { libapache2-mod-xsendfile: 
-    require => Package[apache],
+    require => [Package[apache], Apt::Source[tryphon]],
     ensure => "$release"
   }
 
