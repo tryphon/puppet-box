@@ -6,7 +6,7 @@ release_name=`sed -n '/name/ s/name: //p' $current_file`
 
 mount -o remount,rw /boot
 
-trap "mount -o remount,ro /boot; exit" INT TERM EXIT
+trap "mount -o remount,ro /boot 2> /dev/null || true" INT TERM EXIT
 
 tar -xf $tar_file -C /boot
 
