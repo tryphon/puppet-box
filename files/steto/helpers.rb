@@ -1,5 +1,6 @@
 require 'yaml'
 require 'facter'
+require 'box'
 
 class Object
 
@@ -35,18 +36,6 @@ class Numeric
 
 end
 
-class Box
-
-  def release
-    @release ||= YAML.load(IO.read("/boot/current.yml"))["name"]
-  end
-
-  def name
-    @name ||= release.split("-").first
-  end
-  
-end
-
 Steto.config do
   def process(process_name, name = nil)
     name ||= "#{process_name.gsub('-','_')}_process"
@@ -54,15 +43,21 @@ Steto.config do
   end
 
   def box
-    @box ||= Box.new
+    Box.local
   end
 end
 
 class JSONReporter
 
   def report(checks)
+    # Use by Box::Status.load
     File.open("/var/lib/steto/statuses.json", "w") do |file|
       file.write checks.to_json
+    end
+
+    # Published by apache on /status.json
+    File.open("/var/lib/steto/status.json", "w") do |file|
+      file.write Box.local.status.summary.to_json
     end
   end
 

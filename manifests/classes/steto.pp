@@ -47,3 +47,9 @@ class steto {
     source => "puppet:///box/steto/helpers.rb"
   }
 }
+
+class steto::apache {
+  apache::confd { steto: 
+    source => "puppet:///box/steto/apache.conf"
+  }
+}

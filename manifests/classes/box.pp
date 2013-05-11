@@ -23,6 +23,7 @@ class box {
   include issue
 
   include steto
+  include steto::apache
   include munin::all
 
   include ntp::readonly
