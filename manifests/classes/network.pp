@@ -81,7 +81,10 @@ class network::interfaces {
   file { "/etc/puppet/manifests/classes/network.pp":
     source => "puppet:///box/network/manifest.pp"
   }
-
+  file { "/usr/local/sbin/puppet-restart-network":
+    source => "puppet:///box/network/puppet-restart-network",
+    mode => 755
+  }
   link { "/etc/network/run":
     target => "/var/etc/network/run"
   }

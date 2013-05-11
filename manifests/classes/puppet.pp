@@ -55,7 +55,7 @@ class puppet {
     source => "$source_base/files/puppet/templates"
   }
   file { "/etc/puppet/templates/interfaces":
-    source => ["puppet:///files/network/interfaces.${box_name}", "puppet:///files/network/interfaces", "puppet:///box/puppet/templates/interfaces"]
+    source => ["puppet:///files/network/interfaces.${box_name}", "puppet:///files/network/interfaces", "puppet:///box/network/interfaces"]
   }
 
   file { "/etc/puppet/templates/wpa_supplicant.conf":

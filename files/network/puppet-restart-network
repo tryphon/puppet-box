@@ -1,0 +1,10 @@
+#!/bin/sh -x
+
+  # Puppet runs this command even if tag boot is not defined
+[ "$PUPPET_BOOT" = "true" ] && exit 0
+
+/sbin/ifdown eth0
+pkill -f "dhclient.*eth0"
+resolvconf -d eth0
+
+/sbin/ifup eth0

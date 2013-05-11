@@ -3,8 +3,6 @@ file { ["/var/etc/network", "/var/etc/network/run"]:
   tag => boot
 }
 
-$network_interfaces=split($interfaces,",")
-
 file { "/var/etc/network/interfaces":
   content => template("/etc/puppet/templates/interfaces"),
   notify => Exec["restart-networking"],
@@ -13,7 +11,7 @@ file { "/var/etc/network/interfaces":
 
 exec { "restart-networking": 
   # Puppet runs this command even if tag boot is not defined
-  command => '[ "$PUPPET_BOOT" != "true" ] && /sbin/ifdown eth0 && /sbin/ifup eth0',
+  command => '/usr/local/sbin/puppet-restart-network',
   refreshonly => true
 }
 
