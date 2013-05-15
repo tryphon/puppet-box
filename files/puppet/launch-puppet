@@ -20,6 +20,9 @@ if [ "$1" = "boot" ]; then
         cp $stored_config "/var/etc/puppet/manifests/config.pp"
         chown www-data "/var/etc/puppet/manifests/config.pp"
     fi
+
+    echo "Migrate configuration (if needed)"
+    /usr/local/bin/box config migrate
 fi
 
 /usr/bin/puppet --debug $options /etc/puppet/manifests/site.pp

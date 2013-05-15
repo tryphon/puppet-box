@@ -36,10 +36,16 @@ class box {
   include box::conf
 }
 
+define box::config::migration($source) {
+  file { "/etc/box/migrations/$name.rb" :
+    source => $source
+  }
+}
+
 class box::gem {
   file { "/etc/box": ensure => directory }
 
-  ruby::gem { tryphon-box: ensure => "0.0.8" }
+  ruby::gem { tryphon-box: ensure => "0.0.9" }
   ruby::gem { SyslogLogger: ensure => "2.0" }
 
   file { "/etc/cron.d/box":
@@ -56,6 +62,11 @@ class box::gem {
 class box::conf {
   file { "/etc/box/config.rb": 
     content => template("box/box/config.rb")
+  }
+
+  # Contains migrations for the Box
+  file { "/etc/box/migrations":
+    ensure => directory
   }
 
   # Contains customized config for the Box
