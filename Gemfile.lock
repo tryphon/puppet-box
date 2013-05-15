@@ -1,12 +1,8 @@
 GIT
   remote: git://projects.tryphon.priv/box
-  revision: 86230008a97144b214df78b29055c605b4e989af
+  revision: 8b629541c3996a92c8d3e0b0fcc3fc8d47064045
   specs:
-
-PATH
-  remote: ~/Projects/Box
-  specs:
-    tryphon-box (0.0.8)
+    tryphon-box (0.0.9)
       activesupport
       facter
       httparty

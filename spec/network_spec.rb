@@ -14,7 +14,7 @@ describe "Network" do
         f.puts "file { '#{output_file}': content => template('#{template_file}')  }"
       end
 
-      unless system "puppet apply #{tmp_puppet_file} > /dev/null"
+      unless system "bundle exec puppet apply #{tmp_puppet_file} > /dev/null"
         puts File.read(tmp_puppet_file)
         raise "puppet error"
       end
