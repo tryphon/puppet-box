@@ -114,4 +114,47 @@ describe "Network" do
 
   end
 
+
+  describe "migration CreateNetworkInterfaces" do
+
+    let(:config) { Box::PuppetConfiguration.new }
+    let(:migration) { Box::Config::Migration.create "files/network/20130515104043_create_network_interfaces.rb" }
+
+    before do
+      migration.config = config
+    end
+
+    it "should create network_interfaces eht0 with network_... attributes" do
+      config[:network_method]="dhcp"
+      config[:network_static_address]="192.168.1.2"
+      config[:network_static_netmask]="255.255.255.0"
+      config[:network_static_gateway]="192.168.1.1"
+      config[:network_static_dns1]="192.168.1.1"
+
+      migration.up
+
+      config[:network_interfaces].should == 
+        [
+         { "id" => "eth0", 
+           "method" => "dhcp", 
+           "static_address" => "192.168.1.2", 
+           "static_netmask" => "255.255.255.0", 
+           "static_gateway" => "192.168.1.1",
+           "static_dns1" => "192.168.1.1"
+         }
+        ]
+    end
+
+    it "should change network_interfaces if exists" do
+      config[:network_interfaces] = [ { :id => "dummy" } ]
+      lambda { migration.up }.should_not change { config[:network_interfaces] }
+    end
+
+    it "should create a default network_interfaces if network_ attributes don't exist" do
+      migration.up
+      config[:network_interfaces].should == [ { "id" => "eth0", "method" => "dhcp" } ]
+    end
+
+  end
+
 end

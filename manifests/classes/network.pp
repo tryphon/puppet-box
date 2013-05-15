@@ -88,6 +88,11 @@ class network::interfaces {
   link { "/etc/network/run":
     target => "/var/etc/network/run"
   }
+
+  box::config::migration { 20130515104043_create_network_interfaces:
+    source => "puppet:///box/network/20130515104043_create_network_interfaces.rb" 
+  }
+
 }
 
 class network::wifi {
