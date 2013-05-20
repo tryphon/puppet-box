@@ -1,4 +1,10 @@
 GIT
+  remote: git://github.com/tryphon/facter.git
+  revision: dc324f1d9fc8f0defd664bdb6b023f379905fd41
+  specs:
+    facter (1.7.0)
+
+GIT
   remote: git://projects.tryphon.priv/box
   revision: 8b629541c3996a92c8d3e0b0fcc3fc8d47064045
   specs:
@@ -19,7 +25,6 @@ GEM
     cocaine (0.2.1)
     coderay (1.0.9)
     diff-lcs (1.2.4)
-    facter (1.7.0)
     ffi (1.2.0)
     formatador (0.2.4)
     guard (1.8.0)
@@ -81,6 +86,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  facter!
   guard
   guard-rspec
   puppet (~> 2.7.21)
