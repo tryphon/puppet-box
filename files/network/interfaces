@@ -5,7 +5,7 @@ iface lo inet loopback
 
 <% network_interfaces.each do |interface| %>
 auto <%= interface["id"] %>
-iface <%= interface["id"] %> inet <%= interface["method"] %>
+iface <%= interface["id"] %> inet <%= interface["method"] or "dhcp" %>
 <% if interface["method"] == 'static' %>
   address <%= interface["static_address"] %>
   netmask <%= interface["static_netmask"] %>
@@ -13,6 +13,10 @@ iface <%= interface["id"] %> inet <%= interface["method"] %>
   <% if interface["static_dns1"] %>
   dns-nameservers <%= interface["static_dns1"] %> <%= interface["static_dns2"] %>
   <% end %>
+<% end %>
+
+<% if interface["id"] =~ /^wlan/ %>
+  wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
 <% end %>
 <% end %>
 

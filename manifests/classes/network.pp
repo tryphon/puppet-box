@@ -5,15 +5,18 @@ class network {
   include network::hostname
   include network::resolvconf
   include network::resolvconf::readonly
-  include network::wifi
 
-  steto::conf { "network": 
+  steto::conf { "network":
     source => "puppet:///box/network/steto.rb"
+  }
+
+  file { "/etc/puppet/templates/network":
+    ensure => directory
   }
 }
 
 class network::base {
-  package { [netbase, net-tools]: } 
+  package { [netbase, net-tools]: }
 
   package { ifupdown:
     before => [Link["/etc/network/interfaces"], Link["/etc/network/run"]]
@@ -32,15 +35,15 @@ class network::dhcp::readonly {
   if $debian::lenny {
     file { "/etc/dhcp3":
       ensure => directory
-    } 
+    }
     file { "/etc/dhcp3/dhclient.conf":
       content => template("box/dhcp3/dhclient.conf"),
-      require => Package["dhcp3-client"] 
-    } 
+      require => Package["dhcp3-client"]
+    }
     file { "/etc/dhcp3/dhclient-script":
-      source => "puppet:///box/dhcp3/dhclient-script", 
-      require => Package["dhcp3-client"] 
-    } 
+      source => "puppet:///box/dhcp3/dhclient-script",
+      require => Package["dhcp3-client"]
+    }
   }
 
   if $debian::lenny {
@@ -51,12 +54,12 @@ class network::dhcp::readonly {
 }
 
 class network::ifplugd {
-  package { ifplugd: 
+  package { ifplugd:
     before => Link["/etc/network/interfaces"]
   }
   file { "/etc/default/ifplugd":
-    source => "puppet:///box/network/ifplugd.default", 
-  }  
+    source => "puppet:///box/network/ifplugd.default",
+  }
 }
 
 class network::resolvconf {
@@ -68,7 +71,7 @@ class network::resolvconf::readonly {
 }
 
 class network::hostname {
-  file { "/etc/hostname": 
+  file { "/etc/hostname":
     content => "$box_name"
   }
   host { $box_name: ip => "127.0.1.1" }
@@ -90,7 +93,7 @@ class network::interfaces {
   }
 
   box::config::migration { 20130515104043_create_network_interfaces:
-    source => "puppet:///box/network/20130515104043_create_network_interfaces.rb" 
+    source => "puppet:///box/network/20130515104043_create_network_interfaces.rb"
   }
 
 }
@@ -98,22 +101,22 @@ class network::interfaces {
 class network::wifi {
   package { [wpasupplicant, firmware-ralink, wireless-tools]: }
 
-  file { "/var/etc/wpa_supplicant.conf":
-    mode => 644,
-    content => template("box/wpa_supplicant/wpa_supplicant.conf"),
-    require => Package["wpasupplicant"]
+  file { "/etc/puppet/manifests/classes/network-wifi.pp":
+    source => "puppet:///box/network/manifest-wifi.pp"
   }
+  file { "/etc/puppet/templates/network/wpa_supplicant.conf":
+    source => "puppet:///box/network/wpa_supplicant.conf"
+  }
+
   link { "/etc/wpa_supplicant/wpa_supplicant.conf":
-    target => "/var/etc/wpa_supplicant.conf",
+    target => "/var/etc/wpa_supplicant/wpa_supplicant.conf",
     require => Package[wpasupplicant]
   }
-  line { "blacklist rt2800usb":
+
+  # update initramfs is always updated after puppet
+  line { "rt2800usb-blacklist":
     file => "/etc/modprobe.d/blacklist",
     line => "blacklist rt2800usb"
-  }
-  exec { "update-initramfs":
-    command => "update-initramfs -u",
-    require => Line["blacklist rt2800usb"]
   }
 }
 
