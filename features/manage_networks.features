@@ -1,0 +1,8 @@
+Feature: Manage networks
+  In order to connect the Box to his local network
+  An user
+  wants to setup network interfaces
+
+  @wip
+  Scenario: Configure a static IP address
+    Given I am on /networks/eth0/edit
