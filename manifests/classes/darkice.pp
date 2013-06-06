@@ -13,7 +13,7 @@ class darkice::common {
     source => "puppet:///box/darkice/darkice.init",
     require => File["/etc/default/darkice"],
     mode => 775
-  }    
+  }
   exec { "update-rc.d darkice defaults":
     require => File["/etc/init.d/darkice"],
     creates => "/etc/rc0.d/K20darkice"
@@ -28,7 +28,7 @@ class darkice::common {
     source => "puppet:///box/darkice/darkice-safe",
     require => Package[darkice],
     mode => 775
-  }    
+  }
 
   file { "/etc/puppet/templates/darkice.cfg":
     source => "puppet:///files/darkice/darkice.cfg"
@@ -43,8 +43,8 @@ class darkice::full {
   include apt::multimedia
   include apt::tryphon
 
-  package { darkice-full: 
-    ensure => "1.2+svn509-1",
+  package { darkice-full:
+    ensure => "1.2+svn509-2",
     alias => darkice,
     require => [Apt::Source[tryphon], Apt::Source[debian-multimedia]]
   }
@@ -55,7 +55,7 @@ class darkice::full {
       release => "lenny-backports",
       before => Package[darkice-full]
     }
-  } 
+  }
 }
 
 class darkice {
