@@ -10,6 +10,7 @@ class box {
   include nano
   include ssh
   include cron
+  include locales
 
   include dbus::readonly
   include avahi
