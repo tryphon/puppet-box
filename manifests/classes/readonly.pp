@@ -11,6 +11,11 @@ class readonly::common {
   file { "/var/log.model/dmesg":
     ensure => present
   }
+  file { "/var/log.model/lastlog":
+    ensure => present,
+    group => utmp,
+    mode => 664
+  }
 
   link { "/etc/mtab":
     target => "/proc/mounts"
