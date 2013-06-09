@@ -37,11 +37,16 @@ class network::dhcp::readonly {
       ensure => directory
     }
     file { "/etc/dhcp3/dhclient.conf":
-      content => template("box/dhcp3/dhclient.conf"),
+      content => template("box/dhcp/dhclient.conf.lenny"),
       require => Package["dhcp3-client"]
     }
     file { "/etc/dhcp3/dhclient-script":
-      source => "puppet:///box/dhcp3/dhclient-script",
+      source => "puppet:///box/dhcp/dhclient-script.lenny",
+      require => Package["dhcp3-client"]
+    }
+  } else {
+    file { "/etc/dhcp/dhclient.conf":
+      content => template("box/dhcp/dhclient.conf.squeeze"),
       require => Package["dhcp3-client"]
     }
   }
