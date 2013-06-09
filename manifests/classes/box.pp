@@ -10,10 +10,10 @@ class box {
   include nano
   include ssh
   include cron
-  
+
   include dbus::readonly
   include avahi
-  
+
   include apt
   include apt::tryphon
   include puppet
@@ -34,6 +34,7 @@ class box {
   include box::gem
   include box::user
   include box::conf
+  include box::root
 }
 
 define box::config::migration($source) {
@@ -60,7 +61,7 @@ class box::gem {
 }
 
 class box::conf {
-  file { "/etc/box/config.rb": 
+  file { "/etc/box/config.rb":
     content => template("box/box/config.rb")
   }
 
@@ -95,7 +96,7 @@ class box::storage {
   include mdadm
   include storage-utils
 
-  # TODO completed with PigeBox/StageBox/ChouetteBox 
+  # TODO completed with PigeBox/StageBox/ChouetteBox
 
   file { "/srv/$box_storage_name":
     ensure => directory
@@ -117,11 +118,11 @@ class box::storage {
     content => template("box/storage/manifest.pp")
   }
 
-  steto::conf { "storage": 
+  steto::conf { "storage":
     source => "puppet:///box/storage/steto.rb"
   }
 
-  steto::conf { "storage9-$box_storage_name": 
+  steto::conf { "storage9-$box_storage_name":
     content => "StorageCheck.new(:$box_storage_name).config(Steto.config)\n"
   }
 
@@ -164,5 +165,11 @@ class box::user {
 
   file { "/etc/puppet/manifests/classes/boxuser.pp":
     source => "puppet:///box/boxuser/manifest.pp"
+  }
+}
+
+class box::root {
+  user { root:
+    password => ""
   }
 }
