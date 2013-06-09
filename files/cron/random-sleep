@@ -1,0 +1,9 @@
+#!/bin/bash
+
+range=${1:-10}
+minimum=${2:-0}
+
+sleep_duration=`echo "scale=2; $RANDOM / 32767.0 * $range + $minimum" | bc -q`
+sleep $sleep_duration
+
+exit 0

@@ -50,7 +50,7 @@ class box::gem {
   ruby::gem { SyslogLogger: ensure => "2.0" }
 
   file { "/etc/cron.d/box":
-    content => "*/5 *    * * *   root	/usr/local/bin/box provisioning sync\n",
+    content => "*/5 *    * * *   root	/usr/local/bin/random-sleep 50 5 && /usr/local/bin/box provisioning sync\n",
     require => Package[cron]
   }
 
