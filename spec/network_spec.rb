@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "Network" do
 
   describe "interfaces" do
-    
+
     def render
       output_file = File.expand_path("#{tmp_dir}/output")
       template_file = File.expand_path("files/network/interfaces")
@@ -33,7 +33,7 @@ describe "Network" do
     before do
       FileUtils.mkdir_p tmp_dir
     end
-    
+
     after do
       FileUtils.rm_rf tmp_dir
     end
@@ -64,6 +64,26 @@ describe "Network" do
       it "should use method in 'iface xyz inet ...'" do
         network_interfaces << { "id" => "eth0", "method" => "dummy" }
         output.should include("iface eth0 inet dummy")
+      end
+
+      it "should include a wpa-conf entry when interface is wlan*" do
+        network_interfaces << { "id" => "wlan0" }
+        output.should include("wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf")
+      end
+
+      it "should include a 'vlan_raw_device' entry when interface is vlan*" do
+        network_interfaces << { "id" => "vlan100" }
+        output.should include("vlan_raw_device eth0")
+      end
+
+      it "should use raw_device entry when interface is vlan*" do
+        network_interfaces << { "id" => "vlan100", "raw_device" => "eth1" }
+        output.should include("vlan_raw_device eth1")
+      end
+
+      it "should include iptables nat rule when interface has options nat" do
+        network_interfaces << { "id" => "eth0", "options" => "nat" }
+        output.should include("up iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE")
       end
 
       context "and method is static" do
@@ -107,7 +127,7 @@ describe "Network" do
           network_interface["static_dns2"] = "8.8.4.4"
           output.should include("dns-nameservers 8.8.8.8 8.8.4.4")
         end
-                                        
+
       end
 
     end
@@ -133,12 +153,12 @@ describe "Network" do
 
       migration.up
 
-      config[:network_interfaces].should == 
+      config[:network_interfaces].should ==
         [
-         { "id" => "eth0", 
-           "method" => "dhcp", 
-           "static_address" => "192.168.1.2", 
-           "static_netmask" => "255.255.255.0", 
+         { "id" => "eth0",
+           "method" => "dhcp",
+           "static_address" => "192.168.1.2",
+           "static_netmask" => "255.255.255.0",
            "static_gateway" => "192.168.1.1",
            "static_dns1" => "192.168.1.1"
          }

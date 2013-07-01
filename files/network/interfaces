@@ -18,6 +18,14 @@ iface <%= interface["id"] %> inet <%= interface["method"] or "dhcp" %>
 <% if interface["id"] =~ /^wlan/ %>
   wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
 <% end %>
+
+<% if interface["id"] =~ /^vlan/ %>
+  vlan_raw_device <%= interface["raw_device"] or "eth0" %>
+<% end %>
+
+<% if interface["options"] =~ /nat/ %>
+  up iptables -t nat -A POSTROUTING -o <%= interface["id"] %> -j MASQUERADE
+<% end %>
 <% end %>
 
 <% else %>
