@@ -1,7 +1,7 @@
 class puppet {
   if $debian::lenny {
     include apt::backport
-    package { puppet: 
+    package { puppet:
       ensure => "2.6.2-4~bpo50+1",
       require => [Apt::Source::Pin[puppet], Apt::Source::Pin[puppet-common]]
     }
@@ -29,7 +29,7 @@ class puppet {
   file { "/etc/puppet/manifests":
     ensure => directory,
     recurse => true,
-    source => "$source_base/files/puppet/manifests"
+    source => ["$source_base/files/puppet/manifests", "puppet:///box/puppet/manifests"]
   }
 
   file { "/boot/config.pp":
@@ -49,11 +49,6 @@ class puppet {
     ensure => directory
   }
 
-  file { "/etc/puppet/templates":
-    ensure => directory,
-    recurse => true,
-    source => "$source_base/files/puppet/templates"
-  }
   file { "/etc/puppet/templates/interfaces":
     source => ["puppet:///files/network/interfaces.${box_name}", "puppet:///files/network/interfaces", "puppet:///box/network/interfaces"]
   }
