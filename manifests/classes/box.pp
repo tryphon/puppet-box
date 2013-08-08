@@ -34,6 +34,7 @@ class box {
 
   include box::gem
   include box::user
+  include box::daemon
   include box::conf
   include box::root
 }
@@ -127,6 +128,13 @@ class box::storage {
     content => "StorageCheck.new(:$box_storage_name).config(Steto.config)\n"
   }
 
+}
+
+class box::daemon {
+  user { boxdaemon:
+    uid => 2020,
+    groups => [audio]
+  }
 }
 
 class box::user {
