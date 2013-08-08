@@ -1,5 +1,5 @@
 exec { "boxuser-rsync-home":
-  command => "rsync -a /etc/skel/ /home/boxuser/ && chown -R boxuser:boxuser /home/boxuser",
+  command => "rsync -a /etc/skel/ /home/boxuser/ ; chown -R boxuser:boxuser /home/boxuser",
   user => boxuser,
   creates => "/home/boxuser/.profile",
   tag => boot
@@ -15,4 +15,3 @@ if $ssh_authorized_keys {
     require => Exec["boxuser-rsync-home"]
   }
 }
-
