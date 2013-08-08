@@ -4,6 +4,7 @@ class box {
 
   include linux::kernel-2-6-30
   include syslog
+  include logrotate
   # to allow www-data to read syslog
   include apache::syslog
   include smtp
