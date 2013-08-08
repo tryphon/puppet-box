@@ -1,0 +1,6 @@
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+<% cron_tasks.each do |task| %>
+<%= task["time"] %> <%= task["user"] or "boxuser" %> <%= task["command"] %>
+<% end if has_variable?('cron_tasks') %>
