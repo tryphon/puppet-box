@@ -1,0 +1,4 @@
+DAEMON_OPTS="--server=tunnel.tryphon.eu:4893 --local-port=22"
+<% if has_variable?('reverse_tunnel_token') %>
+TOKEN="<%= reverse_tunnel_token %>"
+<% end %>

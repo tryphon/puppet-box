@@ -13,6 +13,8 @@ class box {
   include cron
   include locales
 
+  include reverse-tunnel
+
   include dbus::readonly
   include avahi
 
