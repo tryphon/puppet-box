@@ -155,12 +155,8 @@ class box::user {
     line => "boxuser	ALL=(root) NOPASSWD: /sbin/reboot"
   }
 
-  sudo::line { "boxuser-syslog":
-    line => "boxuser	ALL=(root) NOPASSWD: /usr/bin/tail -f /var/log/syslog"
-  }
-
   file { "/usr/local/bin/syslog":
-    content => "#!/bin/sh\nsudo /usr/bin/tail -f /var/log/syslog\n",
+    content => "#!/bin/sh\n/usr/bin/tail -f /var/log/syslog\n",
     mode => 755
   }
 
