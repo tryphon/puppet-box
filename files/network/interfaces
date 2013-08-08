@@ -26,6 +26,10 @@ iface <%= interface["id"] %> inet <%= interface["method"] or "dhcp" %>
 <% if interface["options"] =~ /nat/ %>
   up iptables -t nat -A POSTROUTING -o <%= interface["id"] %> -j MASQUERADE
 <% end %>
+
+<% (interface["routes"] || []).each do |route| %>
+  up ip route add <%= route %>
+<% end %>
 <% end %>
 
 <% else %>

@@ -86,6 +86,11 @@ describe "Network" do
         output.should include("up iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE")
       end
 
+      it "should include routes when defined in interface" do
+        network_interfaces << { "id" => "eth0", "routes" => [ "8.8.8.8 via 192.168.1.1" ] }
+        output.should include("up ip route add 8.8.8.8 via 192.168.1.1")
+      end
+
       context "and method is static" do
 
         let(:network_interface) do
