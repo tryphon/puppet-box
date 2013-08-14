@@ -21,6 +21,7 @@ class cron::user {
     source => "puppet:///box/cron/manifest.pp"
   }
   file { "/etc/cron.d/user-crons":
-    ensure => "/var/etc/cron.d/user-crons"
+    ensure => "/var/etc/cron.d/user-crons",
+    require => Package[cron]
   }
 }
