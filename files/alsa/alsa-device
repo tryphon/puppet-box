@@ -1,7 +1,2 @@
 #!/bin/sh
-
-if [ `cat /proc/asound/card0/id` = "Live" ]; then
-    echo -n "hw:0"
-else
-    echo -n "default"
-fi
+echo -n "hw:0"
