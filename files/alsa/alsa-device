@@ -1,2 +1,2 @@
 #!/bin/sh
-echo -n "hw:0"
+echo -n "default"

@@ -11,7 +11,7 @@ class alsa::common {
   }
 
   file { "/usr/local/bin/alsa-device":
-    source => "puppet:///box/alsa/alsa-device",
+    source => ["puppet:///files/alsa/alsa-device", "puppet:///box/alsa/alsa-device"],
     mode => 775
   }
 
@@ -23,7 +23,7 @@ class alsa::common {
 class alsa::readonly {
   include readonly
   readonly::mount_tmpfs { "/var/lib/alsa": }
-}  
+}
 
 class alsa::oss {
   include linux
@@ -55,12 +55,12 @@ class alsa::mixer {
       command => "update-rc.d amixerconf start 51 S .",
       require => File["/etc/init.d/amixerconf"],
       creates => "/etc/rcS.d/S51amixerconf"
-    }   
+    }
   } else {
     exec { "update-rc.d-amixerconf":
       command => "insserv amixerconf",
       require => [File["/etc/init.d/amixerconf"], Exec["update-rc.d-puppet-boot"]],
       unless => "ls /etc/rc?.d/S*amixerconf > /dev/null 2>&1"
-    }   
+    }
   }
 }
