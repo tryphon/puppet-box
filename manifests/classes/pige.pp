@@ -14,6 +14,7 @@ class pige::base {
   }
 
   include pige::go-broadcast
+  include pige::gem
 }
 
 class pige::go-broadcast {
@@ -25,4 +26,12 @@ class pige::go-broadcast {
   file { "/etc/default/go-broadcast":
     ensure => "/var/etc/default/go-broadcast"
   }
+}
+
+class pige::gem {
+  ruby::gem { pige:
+    ensure => "0.0.3",
+    require => Package[libtagc0-dev, libtag1-dev]
+  }
+  package { [libtagc0-dev, libtag1-dev]: }
 }
