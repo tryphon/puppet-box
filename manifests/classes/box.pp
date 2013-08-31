@@ -127,10 +127,10 @@ class box::storage {
     source => "puppet:///box/storage/steto.rb"
   }
 
+  # Must be load after storage.rb, so 'storage9-...'' isn't a typo
   steto::conf { "storage9-$box_storage_name":
     content => "StorageCheck.new(:$box_storage_name).config(Steto.config)\n"
   }
-
 }
 
 class box::daemon {
