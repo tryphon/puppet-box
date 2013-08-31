@@ -127,7 +127,7 @@ class box::storage {
     source => "puppet:///box/storage/steto.rb"
   }
 
-  steto::conf { "storage-$box_storage_name":
+  steto::conf { "storage9-$box_storage_name":
     content => "StorageCheck.new(:$box_storage_name).config(Steto.config)\n"
   }
 
