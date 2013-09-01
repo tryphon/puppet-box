@@ -35,3 +35,12 @@ class pige::gem {
   }
   package { [libtagc0-dev, libtag1-dev]: }
 }
+
+
+class pige::steto {
+  steto::conf { pige:
+    source => "puppet:///box/pige/steto.rb"
+  }
+  include sox::ruby
+  include pige::gem
+}
