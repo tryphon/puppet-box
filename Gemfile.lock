@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/tryphon/facter.git
-  revision: dc324f1d9fc8f0defd664bdb6b023f379905fd41
+  revision: cebe0f69c4bc4372eeae39f6ee54d09ddbe0efed
   specs:
-    facter (1.7.0)
+    facter (1.7.1)
 
 GIT
   remote: git://projects.tryphon.priv/box
