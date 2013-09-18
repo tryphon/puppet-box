@@ -149,7 +149,7 @@ describe "Network" do
       migration.config = config
     end
 
-    it "should create network_interfaces eht0 with network_... attributes" do
+    it "should create network_interfaces eth0 with network_... attributes" do
       config[:network_method]="dhcp"
       config[:network_static_address]="192.168.1.2"
       config[:network_static_netmask]="255.255.255.0"
@@ -170,7 +170,7 @@ describe "Network" do
         ]
     end
 
-    it "should change network_interfaces if exists" do
+    it "should not change network_interfaces if exists" do
       config[:network_interfaces] = [ { :id => "dummy" } ]
       lambda { migration.up }.should_not change { config[:network_interfaces] }
     end
