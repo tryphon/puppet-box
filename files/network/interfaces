@@ -7,10 +7,17 @@ iface lo inet loopback
 auto <%= interface["id"] %>
 iface <%= interface["id"] %> inet <%= interface["method"] or "dhcp" %>
 <% if interface["method"] == 'static' %>
-  address <%= interface["static_address"] %>
-  netmask <%= interface["static_netmask"] %>
-  <% if interface["static_gateway"] %>gateway <%= interface["static_gateway"] %><% end %>
-  <% if interface["static_dns1"] %>
+  <% %w{address netmask gateway}.each do |attribute| %>
+  <% 
+    static_attribute = "static_#{attribute}" 
+    value = interface["static_#{attribute}"] 
+  %>
+  <% if value and not value.empty? %>
+  <%= attribute %> <%= value %>
+  <% end %>
+  <% end %>
+
+  <% if interface["static_dns1"] and not interface["static_dns1"].empty? %>
   dns-nameservers <%= interface["static_dns1"] %> <%= interface["static_dns2"] %>
   <% end %>
 <% end %>

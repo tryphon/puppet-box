@@ -66,6 +66,14 @@ describe "Network" do
         output.should include("iface eth0 inet dummy")
       end
 
+      it "should use ignore blank attribute" do
+        network_interfaces << { "id" => "eth0", "method" => "static" }
+        output.should_not include("address")
+        output.should_not include("gateway")
+        output.should_not include("network")
+        output.should_not include("dns-nameservers")
+      end
+
       it "should include a wpa-conf entry when interface is wlan*" do
         network_interfaces << { "id" => "wlan0" }
         output.should include("wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf")
@@ -177,6 +185,24 @@ describe "Network" do
 
     it "should create a default network_interfaces if network_ attributes don't exist" do
       migration.up
+      config[:network_interfaces].should == [ { "id" => "eth0", "method" => "dhcp" } ]
+    end
+
+    it "shoud ignore network_iface1 attributes" do
+      config[:network_method]="dhcp"
+      config[:iface1_network_method]="dhcp"
+
+      migration.up
+
+      config[:network_interfaces].should == [ { "id" => "eth0", "method" => "dhcp" } ]
+    end
+
+    it "shoud ignore empty value" do
+      config[:network_method]="dhcp"
+      config[:network_static_gateway]=""
+
+      migration.up
+
       config[:network_interfaces].should == [ { "id" => "eth0", "method" => "dhcp" } ]
     end
 
