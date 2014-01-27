@@ -51,7 +51,7 @@ define box::config::migration($source) {
 class box::gem {
   file { "/etc/box": ensure => directory }
 
-  ruby::gem { tryphon-box: ensure => "0.0.15", require => Ruby::Gem[httparty] }
+  ruby::gem { tryphon-box: ensure => "0.0.16", require => Ruby::Gem[httparty] }
   ruby::gem { SyslogLogger: ensure => "2.0" }
   ruby::gem { httparty: ensure => "0.11.0" }
 
