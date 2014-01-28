@@ -3,7 +3,7 @@ file { "/var/etc/wpa_supplicant":
   tag => boot
 }
 
-if $wifi_active {
+if $wifi_networks {
   file { "/var/etc/wpa_supplicant/wpa_supplicant.conf":
     content => template("network/wpa_supplicant.conf"),
     tag => boot

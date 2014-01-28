@@ -4,38 +4,10 @@ describe "Network" do
 
   describe "interfaces" do
 
-    def render
-      output_file = File.expand_path("#{tmp_dir}/output")
-      template_file = File.expand_path("files/network/interfaces")
-
-      tmp_puppet_file = "#{tmp_dir}/test.pp"
-      File.open(tmp_puppet_file, "w") do |f|
-        f.puts "$network_interfaces = #{network_interfaces.inspect}" unless network_interfaces.empty?
-        f.puts "file { '#{output_file}': content => template('#{template_file}')  }"
-      end
-
-      unless system "FACTERIGNORE=^/usr bundle exec puppet apply #{tmp_puppet_file} > /dev/null"
-        puts File.read(tmp_puppet_file)
-        raise "puppet error"
-      end
-
-      File.readlines(output_file).map(&:strip)
-    end
-
     let(:network_interfaces) { [] }
 
     let(:output) do
-      render
-    end
-
-    let(:tmp_dir) { "tmp/spec" }
-
-    before do
-      FileUtils.mkdir_p tmp_dir
-    end
-
-    after do
-      FileUtils.rm_rf tmp_dir
+      PuppetTemplate.new("files/network/interfaces").render :network_interfaces => network_interfaces
     end
 
     it "should define lo" do
@@ -147,6 +119,109 @@ describe "Network" do
 
   end
 
+  describe "wpa_supplicant.conf" do
+
+    let(:wifi_networks) { [] }
+
+    def render(options = {})
+      PuppetTemplate.new("files/network/wpa_supplicant.conf").render({:wifi_networks => wifi_networks}, options)
+    end
+
+    let(:output) do
+      render
+    end
+
+    it "should specify network ssid" do
+      wifi_networks << { "ssid" => "user-ssid" }
+      output.should include('ssid="user-ssid"')
+    end
+
+    it "should specify network psk" do
+      wifi_networks << { "psk" => "user-psk" }
+      output.should include('psk="user-psk"')
+    end
+
+    it "should specify network identity" do
+      wifi_networks << { "identity" => "user-identity" }
+      output.should include('identity="user-identity"')
+    end
+
+    it "should specify network password" do
+      wifi_networks << { "password" => "user-password" }
+      output.should include('password="user-password"')
+    end
+
+    it "should specify network phase2" do
+      wifi_networks << { "phase2" => "user-phase2" }
+      output.should include('phase2="user-phase2"')
+    end
+
+    it "should specify network key_mgmt (without quote)" do
+      wifi_networks << { "key_mgmt" => "RSN" }
+      output.should include('key_mgmt=RSN')
+    end
+
+    it "should specify network pairwise (without quote)" do
+      wifi_networks << { "pairwise" => "TKIP" }
+      output.should include('pairwise=TKIP')
+    end
+
+    it "should specify network group (without quote)" do
+      wifi_networks << { "group" => "TKIP WEP104 WEP40" }
+      output.should include('group=TKIP WEP104 WEP40')
+    end
+
+    it "should suppot several network configurations" do
+      wifi_networks << { "ssid" => "network1" }
+      wifi_networks << { "ssid" => "network2" }
+
+      render(:output => :stripped).should == <<-EOF
+ctrl_interface=/var/run/wpa_supplicant
+ctrl_interface_group=0
+fast_reauth=1
+network={
+ssid="network1"
+}
+network={
+ssid="network2"
+}
+EOF
+    end
+
+    it "should suppot classic WPA2 configuration" do
+      wifi_networks << { "ssid" => "tryphon", "psk" => "secret", "proto" => "RSN", "key_mgmt" => "WPA-PSK", "pairwise" => "TKIP", "group" => "TKIP WEP104 WEP40" }
+      render(:output => :stripped).should == <<-EOF
+ctrl_interface=/var/run/wpa_supplicant
+ctrl_interface_group=0
+fast_reauth=1
+network={
+ssid="tryphon"
+psk="secret"
+proto=RSN
+key_mgmt=WPA-PSK
+pairwise=TKIP
+group=TKIP WEP104 WEP40
+}
+EOF
+    end
+
+    it "should suppot WPA-EAP configuration" do
+      wifi_networks << { "ssid" => "user-ssid", "key_mgmt" => "WPA-EAP IEEE8021X", "eap" => "PEAP", "identity" => "user-identity", "password" => "secret" }
+      render(:output => :stripped).should == <<-EOF
+ctrl_interface=/var/run/wpa_supplicant
+ctrl_interface_group=0
+fast_reauth=1
+network={
+ssid="user-ssid"
+identity="user-identity"
+password="secret"
+key_mgmt=WPA-EAP IEEE8021X
+eap=PEAP
+}
+EOF
+    end
+
+  end
 
   describe "migration CreateNetworkInterfaces" do
 
