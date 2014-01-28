@@ -1,4 +1,5 @@
 require 'tmpdir'
+require 'active_support/core_ext/class/attribute_accessors'
 
 class PuppetTemplate
 
