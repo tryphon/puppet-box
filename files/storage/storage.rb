@@ -16,9 +16,9 @@ OptionParser.new do |opts|
   opts.on("-h", "--help",
           "Show this help message.") { puts opts; exit }
   opts.parse!(ARGV)
-  
+
   @command = ARGV.shift
-  
+
   unless @label and @command == "init"
     puts opts; exit
   end
@@ -38,11 +38,11 @@ class Storage
   end
 
   def exist?
-    File.exists?("/dev/disk/by-label/#{@label}")    
+    File.exists?("/dev/disk/by-label/#{@label}")
   end
 
   def devices
-    IO.read("/proc/partitions").scan(/[hs]d[abcd][1-9]*$/).collect { |p| "/dev/#{p}" }
+    IO.read("/proc/partitions").scan(/[hsv]d[abcd][1-9]*$/).collect { |p| "/dev/#{p}" }
   end
 
   def disks
@@ -55,7 +55,7 @@ class Storage
 
   def blank_disks
     disks.select do |disk|
-      partitions(disk).empty? and 
+      partitions(disk).empty? and
         `sfdisk -l #{disk} 2>&1`.include?("No partitions found")
     end
   end
@@ -122,7 +122,7 @@ class Storage
       c.push "mdadm --manage /dev/md0 --add #{partition}"
     end
   end
-  
+
   def raid_degraded?
     degraded_sys_file = "/sys/devices/virtual/block/md0/md/degraded"
     File.exists?(degraded_sys_file) and IO.read(degraded_sys_file).to_i == 1
