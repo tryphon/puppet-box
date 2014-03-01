@@ -226,7 +226,7 @@ EOF
   describe "migration CreateNetworkInterfaces" do
 
     let(:config) { Box::PuppetConfiguration.new }
-    let(:migration) { Box::Config::Migration.create "files/network/20130515104043_create_network_interfaces.rb" }
+    let(:migration) { Box::Config::Migration.create File.expand_path("../../files/network/20130515104043_create_network_interfaces.rb", __FILE__) }
 
     before do
       migration.config = config
