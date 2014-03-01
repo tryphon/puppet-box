@@ -27,15 +27,21 @@ class apt::tryphon {
   include debian
 
   if $debian::lenny {
-    apt::source { tryphon: 
+    apt::source { tryphon:
       key => "C6ADBBD5",
       content => "deb http://debian.tryphon.eu ${debian::release}-backports main contrib\ndeb http://debian.tryphon.eu $debian::release main contrib"
     }
   } else {
-    apt::source { tryphon: 
+    apt::source { tryphon:
       key => "C6ADBBD5",
       content => "deb http://debian.tryphon.eu $debian::release main contrib"
     }
+  }
+}
+
+class apt::tryphon::dev {
+  apt::source { tryphon-dev:
+    content => "deb http://dev.tryphon.priv/dist/debian/$debian::release/i386/ ./"
   }
 }
 
@@ -43,7 +49,7 @@ class apt::backport {
   include debian
 
   if $debian::lenny {
-    apt::source { lenny-backports: 
+    apt::source { lenny-backports:
       key => "16BA136C",
       content => "deb http://archive.debian.org/debian-backports ${debian::release}-backports main contrib non-free"
     }
@@ -57,7 +63,7 @@ class apt::backport {
 class apt::multimedia {
   include debian
 
-  apt::source { debian-multimedia: 
+  apt::source { debian-multimedia:
     key => "1F41B907",
     content => "deb http://debian-multimedia.tryphon.eu $debian::release main non-free"
   }
