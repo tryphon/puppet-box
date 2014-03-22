@@ -44,8 +44,10 @@ class apt::tryphon {
 }
 
 class apt::tryphon::dev {
+  include apt
   apt::source { tryphon-dev:
-    content => "deb http://dev.tryphon.priv/dist/debian/$debian::release/i386/ ./"
+    content => "deb http://dev.tryphon.priv/dist/debian/$debian::release/i386/ ./",
+    require => File["/etc/apt/apt.conf.d/02allow-unauthenticated"]
   }
 }
 
