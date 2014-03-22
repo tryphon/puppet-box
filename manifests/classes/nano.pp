@@ -1,3 +1,3 @@
-class nano {
-  package { nano: }
+class user-tools {
+  package { [nano, screen, htop]: }
 }

@@ -8,7 +8,7 @@ class box {
   # to allow www-data to read syslog
   include apache::syslog
   include smtp
-  include nano
+  include user-tools
   include ssh
   include cron
   include locales
