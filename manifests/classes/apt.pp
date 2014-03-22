@@ -5,7 +5,8 @@ class apt {
 
   exec { "apt-get_update":
     command => "apt-get update",
-    refreshonly => true
+    refreshonly => true,
+    require => File["/etc/apt/apt.conf.d/02recommended-suggested", "/etc/apt/apt.conf.d/02allow-unauthenticated"]
   }
   Package {
     require => Exec["apt-get_update"]
@@ -20,6 +21,9 @@ class apt {
 
   file { "/etc/apt/apt.conf.d/02recommended-suggested":
     content => "APT::Install-Recommends \"0\";\nAPT::Install-Suggests \"0\";"
+  }
+  file { "/etc/apt/apt.conf.d/02allow-unauthenticated":
+    content => "APT::Get::AllowUnauthenticated \"true\";\n"
   }
 }
 
@@ -67,4 +71,8 @@ class apt::multimedia {
     key => "1F41B907",
     content => "deb http://debian-multimedia.tryphon.eu $debian::release main non-free"
   }
+}
+
+class apt::https {
+  package { apt-transport-https: }
 }
