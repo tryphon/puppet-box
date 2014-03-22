@@ -1,35 +1,11 @@
 class ruby::gems {
   file { "/etc/gemrc":
-    content => "gem: --no-rdoc --no-ri\n",
-    before => Package[rubygems]
-  }
-  if $debian::lenny {
-    include apt::tryphon
-    package { rubygems: 
-      ensure => "1.3.7-1~bpo50+1",
-      require => [Apt::Source::Pin[rubygems], Apt::Source::Pin["rubygems1.8"]]
-    }
-    apt::source::pin { [rubygems, "rubygems1.8"]:
-      source => "lenny-backports",
-      require => Apt::Source[tryphon]
-    }
-  } else {
-    include apt::backport
-
-    package { rubygems: 
-      ensure => "1.8.15-1~bpo60+1",
-      require => Apt::Source::Pin[rubygems]
-    }
-
-    apt::source::pin { rubygems:
-      source => "squeeze-backports",
-      require => Apt::Source[tryphon]
-    }
+    content => "gem: --no-rdoc --no-ri\n"
   }
 
-  exec { "rubygems-fix-date-format":
-    command => 'sed -i "s/ 00:00:00.000000000Z//" /var/lib/gems/1.8/specifications/*.gemspec',
-    refreshonly => true
+  package { ["ruby1.9.1", "ruby1.9.1-dev"]:
+    ensure => "1.9.3.484-1~bpo60+1",
+    require => Apt::Source[tryphon]
   }
 
   include ruby::gems::tryphon
