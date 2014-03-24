@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-if [ $USER != "root" ]; then
+if [ "$USER" != "root" ]; then
   exec sudo $0 $@
 fi
 
