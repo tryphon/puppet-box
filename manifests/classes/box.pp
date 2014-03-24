@@ -80,6 +80,10 @@ class box::conf {
     ensure => directory
   }
 
+  file { "/etc/box/local.d/fix-config-deploy":
+    content => "Box::PuppetConfiguration.system_update_command = Box::PuppetConfiguration.deploy_command\n"
+  }
+
   # Contains customized config at runtime
   file { "/etc/box/local.rb": ensure => "/var/etc/box/local.rb" }
 
