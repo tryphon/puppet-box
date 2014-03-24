@@ -51,7 +51,7 @@ define box::config::migration($source) {
 class box::gem {
   file { "/etc/box": ensure => directory }
 
-  ruby::gem { tryphon-box: ensure => "0.18", require => Package[ruby1.9.1] }
+  ruby::gem { tryphon-box: ensure => "0.18", require => Package["ruby1.9.1"] }
   ruby::gem { SyslogLogger: ensure => "2.0" }
 
   file { "/etc/cron.d/box":
