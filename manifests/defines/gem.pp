@@ -4,6 +4,6 @@ define ruby::gem($ensure = "installed") {
   package { $name:
     provider => gem,
     ensure => $ensure,
-    require => [Exec[gem-source-tryphon], File["/etc/gemrc"]]
+    require => [Exec[gem-source-tryphon], File["/etc/gemrc"], Package["ruby1.9.1"]]
   }
 }
