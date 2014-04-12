@@ -4,6 +4,8 @@ class alsa::common {
 
   include alsa::mixer
   package { alsa-utils: }
+  package { alsa-tools: }
+  package { alsa-tools-gui: }
 
   file { "/usr/local/sbin/lsof-alsa":
     source => "puppet:///box/alsa/lsof-alsa",
@@ -17,6 +19,19 @@ class alsa::common {
 
   file { "/etc/puppet/manifests/classes/alsa.pp":
     source => "puppet:///box/alsa/manifest.pp"
+  }
+
+  file { "/etc/puppet/templates/alsa":
+    ensure => directory
+  }
+
+  file { "/etc/puppet/templates/alsa/asound.conf":
+    source => "puppet:///box/alsa/asound.conf"
+  }
+
+  file { "/etc/asound.conf":
+    ensure => link,
+    target => "/var/etc/asound.conf"
   }
 }
 
