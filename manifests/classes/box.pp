@@ -8,7 +8,7 @@ class box {
   # to allow www-data to read syslog
   include apache::syslog
   include smtp
-  include nano
+  include user-tools
   include ssh
   include cron
   include locales
@@ -51,9 +51,8 @@ define box::config::migration($source) {
 class box::gem {
   file { "/etc/box": ensure => directory }
 
-  ruby::gem { tryphon-box: ensure => "0.0.16", require => Ruby::Gem[httparty] }
+  ruby::gem { tryphon-box: ensure => "0.18", require => Package["ruby1.9.1"] }
   ruby::gem { SyslogLogger: ensure => "2.0" }
-  ruby::gem { httparty: ensure => "0.11.0" }
 
   file { "/etc/cron.d/box":
     content => "*/5 *    * * *   root	/usr/local/bin/random-sleep 50 5 && /usr/local/bin/box provisioning sync\n",
@@ -79,6 +78,10 @@ class box::conf {
   # Contains customized config for the Box
   file { "/etc/box/local.d/":
     ensure => directory
+  }
+
+  file { "/etc/box/local.d/fix-config-deploy":
+    content => "Box::PuppetConfiguration.system_update_command = Box::PuppetConfiguration.deploy_command\n"
   }
 
   # Contains customized config at runtime

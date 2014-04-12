@@ -10,9 +10,9 @@ class apache {
 
   file { "/var/www": ensure => directory, require => Package[apache] }
 
-  file { "/var/log.model/apache2": 
-    ensure => directory, 
-    owner => root, 
+  file { "/var/log.model/apache2":
+    ensure => directory,
+    owner => root,
     group => adm
   }
 
@@ -20,21 +20,25 @@ class apache {
 }
 
 class apache::steto {
-  steto::conf { apache: 
+  steto::conf { apache:
     source => "puppet:///box/apache/steto.rb"
   }
 }
 
 class apache::passenger {
-  include apt::backport
+  include apt::https
 
-  if $debian::lenny {
-    apt::source::pin { [libapache2-mod-passenger, librack-ruby, "librack-ruby1.8"]:
-      source => "lenny-backports",
-      before => Package[libapache2-mod-passenger]
-    }
+  package { libapache2-mod-passenger:
+    require => Apt::Source[passenger]
   }
-  package { libapache2-mod-passenger: }
+
+  apt::source { "passenger":
+    key => "AC40B2F7",
+    content => "deb https://oss-binaries.phusionpassenger.com/apt/passenger ${debian::release} main",
+    require => Package[apt-transport-https]
+  }
+
+  apache::module { passenger: config => true }
 }
 
 class apache::dnssd {
@@ -68,7 +72,7 @@ class apache::xsendfile {
     default => "latest"
   }
 
-  package { libapache2-mod-xsendfile: 
+  package { libapache2-mod-xsendfile:
     require => [Package[apache], Apt::Source[tryphon]],
     ensure => "$release"
   }
