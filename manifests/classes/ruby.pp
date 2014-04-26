@@ -15,8 +15,9 @@ class ruby::gems::tryphon {
   $tryphon_repository = "http://download.tryphon.eu/rubygems/"
 
   exec { "gem-source-tryphon":
-    command => "gem source --add $tryphon_repository",
-    unless => "gem source --list | grep $tryphon_repository"
+    command => "gem1.9.1 source --add $tryphon_repository",
+    unless => "gem1.9.1 source --list | grep $tryphon_repository",
+    require => Package["ruby1.9.1"]
   }
 }
 
