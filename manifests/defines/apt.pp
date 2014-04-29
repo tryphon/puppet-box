@@ -10,7 +10,7 @@ define apt::key($ensure = present, $source) {
         require => File["/etc/apt/${name}.key"]
       }
     }
-    
+
     absent: {
       file { "/etc/apt/${name}.key":
         ensure => absent
@@ -26,13 +26,13 @@ define apt::source($key = false, $content) {
   file { "/etc/apt/sources.list.d/$name.list":
     content => $content,
     notify => Exec["apt-get-update-for-source-${name}"]
-  } 
+  }
 
   if $key {
     notice("key: '$key'")
     apt::key { $key:
       source => "puppet:///box/apt/$name.key"
-    } 
+    }
 
     File["/etc/apt/sources.list.d/$name.list"] {
       require => Apt::Key[$key]
@@ -52,10 +52,16 @@ define apt::source::pin($source, $release = false) {
   }
 
   apt::preferences { $name:
-    package => $name, 
+    package => $name,
     pin => "release a=$real_release",
-    priority => 999,
-    require => Apt::Source[$source]
+    priority => 999
+  }
+
+  # See apt::backport
+  if $source !~ /-backports$/ {
+    Apt::Preferences[$name] {
+      require => Apt::Source[$source]
+    }
   }
 }
 
@@ -76,7 +82,7 @@ Pin-Priority: $priority
     exec { "update-apt-preferences-for-$name":
       command => "/usr/bin/find /etc/apt/preferences.d -maxdepth 1 -type f ! -name '*puppettmp' -print0 | sort -z | xargs -0 cat >| /etc/apt/preferences",
       refreshonly => true
-    } 
+    }
   } else {
     file { "/etc/apt/preferences.d/$name":
       content => "# file managed by puppet
@@ -86,5 +92,5 @@ Pin-Priority: $priority
 "
     }
   }
-    
+
 }

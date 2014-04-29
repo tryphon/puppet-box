@@ -52,18 +52,7 @@ class apt::tryphon::dev {
 }
 
 class apt::backport {
-  include debian
-
-  if $debian::lenny {
-    apt::source { lenny-backports:
-      key => "16BA136C",
-      content => "deb http://archive.debian.org/debian-backports ${debian::release}-backports main contrib non-free"
-    }
-  } else {
-    apt::source { squeeze-backports:
-      content => "deb http://backports.debian.org/debian-backports squeeze-backports main contrib non-free"
-    }
-  }
+  # Provided by SystemBuilder
 }
 
 class apt::multimedia {
