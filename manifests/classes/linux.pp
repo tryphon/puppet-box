@@ -11,7 +11,5 @@ class linux::kernel-2-6-30 {
     apt::source::pin { "linux-image-2.6-686":
       source => "lenny-backports"
     }
-  } else {
-    package { "linux-image-2.6-686": }
   }
 }
