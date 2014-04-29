@@ -4,8 +4,13 @@ class ruby::gems {
   }
 
   package { ["ruby1.9.1", "ruby1.9.1-dev"]:
-    ensure => "1.9.3.484-1~bpo60+1",
-    require => Apt::Source[tryphon]
+  }
+
+  if $debian::squeeze {
+    Package["ruby1.9.1", "ruby1.9.1-dev"] {
+      ensure => "1.9.3.484-1~bpo60+1",
+      require => Apt::Source[tryphon]
+    }
   }
 
   include ruby::gems::tryphon
