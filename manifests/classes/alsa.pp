@@ -33,6 +33,15 @@ class alsa::common {
     ensure => link,
     target => "/var/etc/asound.conf"
   }
+
+  file { "/etc/puppet/files/alsa":
+    ensure => directory
+  }
+
+  file { "/etc/puppet/files/alsa/asound.conf.default":
+    # Default asound.conf can be changed by Box project
+    source => ["puppet:///files/alsa/asound.conf.default", "puppet:///box/alsa/asound.conf.default"]
+  }
 }
 
 class alsa::readonly {
