@@ -46,7 +46,7 @@ class apt::tryphon {
 class apt::tryphon::dev {
   include apt
   apt::source { tryphon-dev:
-    content => "deb http://dev.tryphon.priv/dist/debian/${debian::release}/${architecture}/ ./",
+    content => "deb http://dev.tryphon.priv/dist/debian/${debian::release}/${box_architecture}/ ./",
     require => File["/etc/apt/apt.conf.d/02allow-unauthenticated"]
   }
 }
