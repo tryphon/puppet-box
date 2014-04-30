@@ -9,3 +9,4 @@ gem "tryphon-box", :git => "git://projects.tryphon.priv/box" #, :path => "~/Proj
 gem "facter", :git => "git://github.com/tryphon/facter.git"
 
 gem "puppet-syntax"
+gem "puppet-lint"
