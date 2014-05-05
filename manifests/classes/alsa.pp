@@ -74,5 +74,7 @@ class alsa::mixer {
     content => template("box/alsa/amixerconf.default")
   }
 
-  initd_script { 'amixerconf': }
+  initd_script { 'amixerconf':
+    require => Initd_Script['puppet-boot']
+  }
 }
