@@ -74,17 +74,5 @@ class alsa::mixer {
     content => template("box/alsa/amixerconf.default")
   }
 
-  if $debian::lenny {
-    exec { "update-rc.d-amixerconf":
-      command => "update-rc.d amixerconf start 51 S .",
-      require => File["/etc/init.d/amixerconf"],
-      creates => "/etc/rcS.d/S51amixerconf"
-    }
-  } else {
-    exec { "update-rc.d-amixerconf":
-      command => "insserv amixerconf",
-      require => [File["/etc/init.d/amixerconf"], Exec["update-rc.d-puppet-boot"]],
-      unless => "ls /etc/rc?.d/S*amixerconf > /dev/null 2>&1"
-    }
-  }
+  initd_script { 'amixerconf': }
 }

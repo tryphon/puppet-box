@@ -62,19 +62,7 @@ class puppet {
     mode => 755
   }
 
-  if $debian::lenny {
-    exec { "update-rc.d-puppet-boot":
-      command => "update-rc.d puppet-boot start 38 S . stop 40 0 6 .",
-      require => File["/etc/init.d/puppet-boot"],
-      creates => "/etc/rcS.d/S38puppet-boot"
-    }
-  } else {
-    exec { "update-rc.d-puppet-boot":
-      command => "insserv puppet-boot",
-      require => File["/etc/init.d/puppet-boot"],
-      unless => "ls /etc/rcS.d/S*puppet-boot > /dev/null 2>&1"
-    }
-  }
+  initd_script { 'puppet-boot': }
 
   sudo::line { "www-data-launch-puppet":
     line => "www-data	ALL=(root) NOPASSWD: /usr/local/sbin/launch-puppet"

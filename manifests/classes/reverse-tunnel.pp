@@ -7,10 +7,7 @@ class reverse-tunnel {
     mode    => '0775'
   }
 
-  exec { 'update-rc.d reverse-tunnel defaults':
-    require => File['/etc/init.d/reverse-tunnel'],
-    creates => '/etc/rc0.d/K20reverse-tunnel'
-  }
+  initd_script { 'reverse-tunnel': }
 
   file { '/etc/puppet/templates/reverse-tunnel.default':
     source => 'puppet:///box/reverse-tunnel/reverse-tunnel.default.erb'
