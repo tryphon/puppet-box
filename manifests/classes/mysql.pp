@@ -44,7 +44,8 @@ class mysql::server {
   file { "/etc/mysql/debian.cnf":
     ensure => link,
     force => true,
-    target => "/srv/$box_storage_name/mysql/debian.cnf"
+    target => "/srv/$box_storage_name/mysql/debian.cnf",
+    require => Package["mysql-server"]
   }
 
   file { '/usr/local/sbin/mysql-debian-sys-maint':
