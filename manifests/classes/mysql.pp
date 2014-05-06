@@ -17,7 +17,7 @@ class mysql::server {
     shell => "/bin/false"
   }
 
-  package { "mysql-server": 
+  package { "mysql-server":
     require => [User[mysql], Group[mysql]]
   }
 
@@ -39,5 +39,16 @@ class mysql::server {
   file { "/etc/mysql/conf.d/max-connections.cnf":
     content => "[mysqld]\nmax_connections        = 200\n",
     require => Package["mysql-server"]
+  }
+
+  file { "/etc/mysql/debian.cnf":
+    ensure => link,
+    force => true,
+    target => "/srv/$box_storage_name/mysql/debian.cnf"
+  }
+
+  file { '/usr/local/sbin/mysql-debian-sys-maint':
+    source => 'puppet:///box/mysql/mysql-debian-sys-maint',
+    mode => 0755
   }
 }

@@ -15,3 +15,10 @@ exec { "mysql_install_db":
   require => File[$mysql_real_directory],
   tag => boot
 }
+
+exec { "mysql-debian-sys-maint":
+  command => "/usr/local/sbin/mysql-debian-sys-maint",
+  creates => "$mysql_real_directory/debian.cnf",
+  require => Exec["mysql_install_db"],
+  tag => boot
+}
