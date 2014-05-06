@@ -1,5 +1,5 @@
 class MountPoint
-  
+
   def self.all
     @all ||= `mount`.scan(%r{([^ ]+) on ([^ ]+) type ([^ ]+) \(([^\(]+)\)}).map { |values| [[:device, :mount_point, :type, :options], values].transpose }.map { |pairs| Hash[pairs] }.map { |attributes| MountPoint.new attributes }
   end
@@ -31,7 +31,7 @@ end
 class StorageCheck
 
   attr_accessor :name
-  
+
   def initialize(name)
     @name = name
   end
@@ -43,7 +43,7 @@ class StorageCheck
   def check_name(suffix)
     "storage_#{name}_#{suffix}".to_sym
   end
-  
+
   def config(config)
     config.check check_name(:disk_by_label) do
       File.exists?("/dev/disk/by-label/#{name}") or mount_point.present?
@@ -60,7 +60,7 @@ class StorageCheck
 end
 
 Steto.config do
-  nagios "disks_free_space", "check_disk", :warning => 10, :critical => 5, :x => '/'
+  nagios "disks_free_space", "check_disk", :warning => '10%', :critical => '5%', :x => '/'
 
   def storage_raid?
     @storage_raid ||= Dir["/dev/md[0-9]*"].present?
