@@ -37,9 +37,21 @@ class Numeric
 end
 
 Steto.config do
-  def process(process_name, name = nil)
-    name ||= "#{process_name.gsub('-','_')}_process"
-    nagios name, "check_procs", :critical => "1:", :command => process_name
+  def process(process_name, options_or_name = {})
+    options =
+      if String === options_or_name
+        { :name => options_or_name }
+      else
+        options_or_name
+      end
+
+    options = {
+      :name => "#{process_name.gsub('-','_')}_process",
+      :count => 1,
+      :level => :critical
+    }.merge(options)
+
+    nagios options[:name], "check_procs", options[:level] => "#{options[:count]}:", :command => process_name
   end
 
   def box
