@@ -1,5 +1,3 @@
-puts "meuh"
-
 Given /^the box configuration contains ([a-z_]+) = "([^"]*)"$/ do |key, value|
   current_box.configuration do |config|
     config[key] = value
