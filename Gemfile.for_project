@@ -1,0 +1,24 @@
+#
+# Use this file in the project Gemfile :
+#
+# eval_gemfile 'modules/box/Gemfile.for_project'
+#
+
+source 'https://rubygems.org'
+
+gem "rake"
+gem "system-builder", :git => "git://projects.tryphon.priv/system-builder"
+gem "tryphon-vmbox", :git => "git://projects.tryphon.priv/vmbox"
+gem "qemu", :git => "git://projects.tryphon.priv/ruby-qemu"
+gem "tryphon-box", :git => "git://projects.tryphon.priv/box"
+
+gem "puppet-syntax"
+gem "puppet-lint"
+
+group :cucumber do
+  gem 'capybara'
+  gem 'cucumber'
+  gem 'capybara-mechanize', :git => "git://github.com/albanpeignier/capybara-mechanize.git"
+  gem "rspec"
+  gem "net-ssh"
+end
