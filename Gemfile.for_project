@@ -21,4 +21,5 @@ group :cucumber do
   gem 'capybara-mechanize', :git => "git://github.com/albanpeignier/capybara-mechanize.git"
   gem "rspec"
   gem "net-ssh"
+  gem 'sshkey'
 end
