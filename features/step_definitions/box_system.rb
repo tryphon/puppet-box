@@ -9,3 +9,7 @@ end
 When /^the box reboots$/ do
   current_box.reboot
 end
+
+Then /^a file "([^"]*)" should exist$/ do |filename|
+  current_box.file(filename).exist?.should be_true
+end
