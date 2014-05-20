@@ -3,8 +3,8 @@ class apache {
     alias => apache
   }
 
-  file { "/etc/apache2/sites-available/default":
-    source => "$source_base/files/apache/default",
+  file { '/etc/apache2/sites-available/default':
+    source => ["puppet:///files/apache/default.${box_name}", 'puppet:///files/apache/default'],
     require => Package[apache]
   }
 
