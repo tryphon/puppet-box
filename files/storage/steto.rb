@@ -67,6 +67,6 @@ Steto.config do
   end
 
   if storage_raid?
-    nagios :pige_raid, "check_linux_raid"
+    nagios :disks_raid, "check_raid"
   end
 end

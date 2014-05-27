@@ -7,6 +7,9 @@ class steto {
   include network::dnsutils
   package { [nagios-plugins-basic, nagios-plugins-standard, beep]: }
 
+  # Provides check_raid for example, required wheezy
+  package { 'nagios-plugins-contrib': }
+
   file { ["/etc/steto", "/etc/steto/conf.d"]:
     ensure => directory
   }
@@ -29,7 +32,7 @@ class steto {
       require => File["/etc/steto/conf.d"]
     }
 
-    if $source != '' { 
+    if $source != '' {
       File["/etc/steto/conf.d/${name}.rb"] {
         source => $source
       }
@@ -40,16 +43,16 @@ class steto {
     }
   }
 
-  steto::conf { "report-syslog": 
+  steto::conf { "report-syslog":
     source => "puppet:///box/steto/report-syslog.rb"
   }
-  steto::conf { "00-helpers": 
+  steto::conf { "00-helpers":
     source => "puppet:///box/steto/helpers.rb"
   }
 }
 
 class steto::apache {
-  apache::confd { steto: 
+  apache::confd { steto:
     source => "puppet:///box/steto/apache.conf"
   }
 }
