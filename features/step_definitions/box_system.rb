@@ -13,3 +13,7 @@ end
 Then /^a file "([^"]*)" should exist$/ do |filename|
   current_box.file(filename).exist?.should be_true
 end
+
+Then /^a directory "([^"]*)" should exist$/ do |name|
+  current_box.directory(name).exist?.should be_true
+end
