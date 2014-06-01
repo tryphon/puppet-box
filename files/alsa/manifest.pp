@@ -5,7 +5,7 @@ class alsa {
 
   # OPTIMIZEME specific to RivendellBoxes (see #1087)
   if $alsa_config == "" and $alsa::device_id == "DSP" {
-    notice("Define default alsa_config for RME HDSP support");
+    notice("Define default alsa_config for RME HDSP support")
     $alsa_config = { "pcm.rd0" => { "type" => "plug", "slave.pcm" => "hw:0" } }
   }
 
