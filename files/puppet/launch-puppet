@@ -14,10 +14,15 @@ if [ "$1" = "boot" ]; then
         mkdir -p "/var/etc/puppet/manifests"
         echo "Restore stored configuration"
 
-        stored_config="/boot/config.pp.`facter macaddress`"
-        [ ! -f $stored_config ] && stored_config="/boot/config.pp"
+        cp "/boot/config.pp" "/var/etc/puppet/manifests/config.pp"
 
-        cp $stored_config "/var/etc/puppet/manifests/config.pp"
+        specific_config="/boot/config.pp.`facter macaddress`"
+        if [ -f "$specific_config" ]; then
+          echo "Use specific configuration ($specific_config)"
+          echo >> "/var/etc/puppet/manifests/config.pp"
+          cat "$specific_config" >> "/var/etc/puppet/manifests/config.pp"
+        fi
+
         chown www-data "/var/etc/puppet/manifests/config.pp"
     fi
 
