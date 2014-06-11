@@ -5,7 +5,6 @@ class alsa::common {
   include alsa::mixer
   package { alsa-utils: }
   package { alsa-tools: }
-  package { alsa-tools-gui: }
 
   file { "/usr/local/sbin/lsof-alsa":
     source => "puppet:///box/alsa/lsof-alsa",
