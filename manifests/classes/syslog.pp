@@ -7,18 +7,19 @@ class syslog {
   }
 
   file { "/etc/logrotate.d/rsyslog":
-    source => "puppet:///box/syslog/rsyslog.logrotate"
+    source => "puppet:///box/syslog/rsyslog.logrotate",
+    mode => 644
   }
 
-  file { "/var/lib/logrotate":  
+  file { "/var/lib/logrotate":
     ensure => directory
   }
 
   readonly::mount_tmpfs { "/var/lib/logrotate": }
 
-  file { "/var/log.model/syslog": 
-    ensure => present, 
-    owner => root, 
+  file { "/var/log.model/syslog":
+    ensure => present,
+    owner => root,
     group => adm,
     mode => 640
   }
@@ -57,7 +58,7 @@ class rsyslog::server {
 }
 
 class rsyslog::steto {
-  steto::conf { syslog: 
+  steto::conf { syslog:
     source => "puppet:///box/syslog/steto.rb"
   }
 }
