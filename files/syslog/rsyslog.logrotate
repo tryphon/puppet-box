@@ -7,6 +7,6 @@
 	compress
   create 640 root adm
 	postrotate
-		invoke-rc.d rsyslog reload > /dev/null
+		invoke-rc.d rsyslog rotate > /dev/null
 	endscript
 }
