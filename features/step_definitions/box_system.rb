@@ -17,3 +17,11 @@ end
 Then /^a directory "([^"]*)" should exist$/ do |name|
   current_box.directory(name).exist?.should be_true
 end
+
+When /^the service "([^"]*)" is restarted$/ do |service|
+  current_box.ssh("invoke-rc.d #{service} restart")
+end
+
+Then /^the box syslog is saved$/ do
+  save_box_syslog
+end
