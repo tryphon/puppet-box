@@ -4,8 +4,10 @@ Users
 2010: mysql
 2020: boxdaemon
 2030: pige
+2050: ftp
 
 Group:
 
 2000: rivendell (rivendellboxes)
 2010: mysql
+2050: ftp
