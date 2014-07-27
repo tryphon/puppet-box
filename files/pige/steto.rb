@@ -22,7 +22,7 @@ Steto.config do
   check :pige_last_pige_not_silent do
     if pige_index.last_record
       begin
-        Sox::Stats.new(pige_index.last_record.filename, :use_cache => true).silent?
+        not Sox::Stats.new(pige_index.last_record.filename, :use_cache => true).silent?
       rescue => e
         Steto.logger.debug "Can't read last pige file: #{e}"
         nil
