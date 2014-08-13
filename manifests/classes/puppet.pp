@@ -12,6 +12,8 @@ class puppet {
     package { puppet: }
   }
 
+  include puppet::facter::fixes
+
   # Fix support of START=no
   file { "/etc/init.d/puppet":
     source => "puppet:///box/puppet/puppet.init",
@@ -84,5 +86,26 @@ class puppet::download-config {
   file { "/etc/cron.d/download-puppet-config":
     content => template("box/puppet/download-puppet-config.cron.d"),
     require => Package[cron]
+  }
+}
+
+class puppet::facter::fixes {
+  package { facter: }
+
+  file { '/usr/lib/ruby/vendor_ruby/facter/processor.rb':
+    source => 'puppet:///box/facter/processor.rb',
+    require => Package['facter']
+  }
+  file { '/usr/lib/ruby/vendor_ruby/facter/ipaddress.rb':
+    source => 'puppet:///box/facter/ipaddress.rb',
+    require => Package['facter']
+  }
+  file { '/usr/lib/ruby/vendor_ruby/facter/ipaddress6.rb':
+    source => 'puppet:///box/facter/ipaddress6.rb',
+    require => Package['facter']
+  }
+  file { '/usr/lib/ruby/vendor_ruby/facter/domain.rb':
+    source => 'puppet:///box/facter/domain.rb',
+    require => Package['facter']
   }
 }
