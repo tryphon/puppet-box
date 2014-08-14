@@ -51,7 +51,7 @@ define box::config::migration($source) {
 class box::gem {
   file { "/etc/box": ensure => directory }
 
-  ruby::gem { tryphon-box: ensure => "0.19" }
+  ruby::gem { tryphon-box: ensure => "0.20" }
   ruby::gem { SyslogLogger: ensure => "2.0" }
 
   file { "/etc/cron.d/box":
@@ -60,7 +60,7 @@ class box::gem {
   }
 
   file { "/etc/box/registration_secret":
-    content => "secret",
+    content => $box_secret,
     mode => 600
   }
 }
