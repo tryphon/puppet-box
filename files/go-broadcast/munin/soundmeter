@@ -1,0 +1,62 @@
+#!/usr/bin/env ruby
+
+require 'munin'
+require 'httparty'
+
+class SoundMeterPlugin < Munin::Plugin
+
+  def initialize
+    super
+
+    declare_field :peak, :label => "Peak level dB", :type => :gauge, :min => -100, :max => 0
+
+    @@graph_options[:info] = "This graph shows audio levels"
+    @@graph_options[:vlabel] = "dBFS"
+    @@graph_options[:args] = "--lower-limit -100 --upper-limit 0"
+    @@graph_options[:scale] = "no"
+  end
+
+  graph_attributes "Sound Level", :category => 'go-broadcast'
+
+  def host
+    ENV.fetch('host', 'localhost')
+  end
+
+  def response
+    @response ||= HTTParty.get("http://#{host}:9000/soundmeter.json")
+  end
+
+  def sound_meter
+    response.code == 200 ? response : {}
+  end
+
+  def raw_peak_levels
+    unless sound_meter.empty?
+      sound_meter["history"]["300"].map { |h| h["PeakLevel"] }
+    else
+      []
+    end
+  end
+
+  def raw_peak_level
+    raw_peak_levels.max
+  end
+
+  def peak_level
+    if raw_peak_level
+      peak_level = 10 * Math.log(raw_peak_level) / 2.302585092994046
+      [-100, peak_level].max # munin doesn't like -Infinite ...
+    end
+  end
+
+  def retrieve_values
+    { :peak => peak_level }
+  rescue => e
+    $stderr.puts "Can't read values from SoundMeter API: #{e}"
+    {}
+  end
+
+
+end
+
+SoundMeterPlugin.new.run
