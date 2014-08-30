@@ -1,6 +1,5 @@
-$alsa_device = generate("/usr/local/bin/alsa-device")
-
 class alsa {
+  $device = generate("/usr/local/bin/alsa-device")
   $device_id = inline_template("<%= File.read('/proc/asound/card0/id').chomp %>")
 
   # OPTIMIZEME specific to RivendellBoxes (see #1087)
@@ -24,3 +23,6 @@ class alsa {
 }
 
 include alsa
+
+# DEPRECATED
+$alsa_device = $alsa::device
