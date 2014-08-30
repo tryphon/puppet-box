@@ -59,7 +59,7 @@ class pige::cron {
   package { rake: }
 
   file { "/usr/share/pigecontrol/tasks/pige.rake":
-    source => "puppet:///box/files/pige/pige.rake"
+    source => "puppet:///box/pige/pige.rake"
   }
   include sox
 
