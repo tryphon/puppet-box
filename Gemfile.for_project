@@ -12,6 +12,7 @@ gem "tryphon-vmbox", :git => "git://projects.tryphon.priv/vmbox"#, :path => "~/P
 gem "qemu", :git => "git://projects.tryphon.priv/ruby-qemu"#, :path => "~/Projects/RubyQEMU"
 gem "tryphon-box", :git => "git://projects.tryphon.priv/box"
 
+gem "puppet"
 gem "puppet-syntax"
 gem "puppet-lint"
 
