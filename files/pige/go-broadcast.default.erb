@@ -1,2 +1,2 @@
-DAEMON_OPTS="backup --alsa-device=<%= alsa_device %> /srv/pige/records/"
+DAEMON_OPTS="backup --alsa-device=<%= scope.lookupvar('alsa::device') %> --http-bind=:9000 -files-root=/srv/pige/records/ --log-syslog"
 DAEMON_USER="pige"

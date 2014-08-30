@@ -4,6 +4,14 @@ class pige::base {
     groups => [audio],
   }
 
+  file { [
+    "/usr/share/pigecontrol",
+    "/usr/share/pigecontrol/tasks",
+    "/usr/share/pigecontrol/bin"
+    ]:
+    ensure => directory
+  }
+
   file { "/usr/local/sbin/pige-migrate-uid":
     source => "puppet:///box/pige/pige-migrate-uid.sh",
     mode => 755
@@ -15,13 +23,14 @@ class pige::base {
 
   include pige::go-broadcast
   include pige::gem
+  include pige::cron
 }
 
 class pige::go-broadcast {
   include ::go-broadcast
 
   file { "/etc/puppet/templates/go-broadcast.default":
-    source => "puppet:///box/pige/go-broadcast.default.erb"
+    source => ['puppet:///files/pige/go-broadcast.default.erb', 'puppet:///box/pige/go-broadcast.default.erb']
   }
   file { "/etc/default/go-broadcast":
     ensure => "/var/etc/default/go-broadcast"
@@ -43,4 +52,28 @@ class pige::steto {
   }
   include sox::ruby
   include pige::gem
+}
+
+class pige::cron {
+  include ::cron # ::cron not supported by this puppet version
+  package { rake: }
+
+  file { "/usr/share/pigecontrol/tasks/pige.rake":
+    source => "puppet:///box/files/pige/pige.rake"
+  }
+  include sox
+
+  file { "/usr/share/pigecontrol/bin/pige-cron":
+    source => "puppet:///box/pige/pige-cron",
+    mode => 755
+  }
+
+  file { "/etc/cron.d/pige":
+    source => "puppet:///box/pige/pige.cron.d",
+    require => Package[cron],
+    # It should be default .. but :
+    # File found in 664 with this message from cron :
+    # INSECURE MODE (group/other writable) (/etc/cron.d/pige)
+    mode => 644
+  }
 }
