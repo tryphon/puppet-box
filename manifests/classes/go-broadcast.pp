@@ -1,10 +1,9 @@
 class go-broadcast {
   include apt::tryphon::dev
-  # require for lame backport
-  include apt::tryphon
+
   package { "go-broadcast":
     ensure => "0.11+build99",
-    require => [Apt::Source[tryphon-dev], Apt::Source[tryphon]]
+    require => Apt::Source[tryphon-dev]
   }
   include go-broadcast::munin
 }
