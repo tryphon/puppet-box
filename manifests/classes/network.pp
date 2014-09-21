@@ -119,9 +119,8 @@ class network::wifi {
   }
 
   # update initramfs is always updated after puppet
-  line { "rt2800usb-blacklist":
-    file => "/etc/modprobe.d/blacklist.conf",
-    line => "blacklist rt2800usb"
+  file { "/etc/modprobe.d/rt2800usb.conf":
+    content => "blacklist rt2800usb\n"
   }
 }
 
