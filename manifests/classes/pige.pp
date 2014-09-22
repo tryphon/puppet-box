@@ -1,13 +1,13 @@
-class pige::base {
+class pige::base($web_application = "pigecontrol") {
   user { pige:
     uid => 2030,
     groups => [audio],
   }
 
   file { [
-    "/usr/share/pigecontrol",
-    "/usr/share/pigecontrol/tasks",
-    "/usr/share/pigecontrol/bin"
+    "/usr/share/${web_application}",
+    "/usr/share/${web_application}/tasks",
+    "/usr/share/${web_application}/bin"
     ]:
     ensure => directory
   }
@@ -58,18 +58,18 @@ class pige::cron {
   include ::cron # ::cron not supported by this puppet version
   package { rake: }
 
-  file { "/usr/share/pigecontrol/tasks/pige.rake":
+  file { "/usr/share/${pige::base::web_application}/tasks/pige.rake":
     source => "puppet:///box/pige/pige.rake"
   }
   include sox
 
-  file { "/usr/share/pigecontrol/bin/pige-cron":
+  file { "/usr/share/${pige::base::web_application}/bin/pige-cron":
     source => "puppet:///box/pige/pige-cron",
     mode => 755
   }
 
   file { "/etc/cron.d/pige":
-    source => "puppet:///box/pige/pige.cron.d",
+    content => "1,16,31,46 * * * *     pige   /usr/share/${pige::base::web_application}/bin/pige-cron\n",
     require => Package[cron],
     # It should be default .. but :
     # File found in 664 with this message from cron :

@@ -2,5 +2,12 @@
 
 export PATH=/usr/local/bin:$PATH
 
-cd /usr/share/pigecontrol
+for application in pigecontrol stagecontrol; do
+    application_directory="/usr/share/$application"
+    if [ -d $application_directory ]; then
+        break
+    fi
+done
+
+cd $application_directory
 bundle exec rake --silent --rakefile tasks/pige.rake pige:${1:-cron} 2>&1 | logger -t pige-cron -i
