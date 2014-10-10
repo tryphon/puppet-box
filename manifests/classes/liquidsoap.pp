@@ -10,7 +10,10 @@ class liquidsoap {
       source => "lenny-backports"
     }
   } else {
-    package { liquidsoap: }
+    package { 'liquidsoap': }
+    # All but :
+    # apt-cache search liquidsoap-plugin | awk '{ print $1 }' | egrep -v -- "-(all|ao|camlimages|dssi|frei0r|gavl|gd|graphics|gstreamer|jack|portaudio|pulseaudio|sdl|schroedinger)" | paste --serial -d","
+    package { ['liquidsoap-plugin-alsa','liquidsoap-plugin-faad','liquidsoap-plugin-flac','liquidsoap-plugin-icecast','liquidsoap-plugin-ladspa','liquidsoap-plugin-lame','liquidsoap-plugin-lastfm','liquidsoap-plugin-lo','liquidsoap-plugin-mad','liquidsoap-plugin-ogg','liquidsoap-plugin-oss','liquidsoap-plugin-samplerate','liquidsoap-plugin-soundtouch','liquidsoap-plugin-speex','liquidsoap-plugin-taglib','liquidsoap-plugin-theora','liquidsoap-plugin-voaacenc','liquidsoap-plugin-vorbis','liquidsoap-plugin-xmlplaylist']: }
   }
 
   include sox
