@@ -65,5 +65,5 @@ class apt::multimedia {
 }
 
 class apt::https {
-  package { apt-transport-https: }
+  package { ['apt-transport-https', 'ca-certificates']: }
 }

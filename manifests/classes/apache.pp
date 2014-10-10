@@ -35,7 +35,7 @@ class apache::passenger {
   apt::source { "passenger":
     key => "AC40B2F7",
     content => "deb https://oss-binaries.phusionpassenger.com/apt/passenger ${debian::release} main",
-    require => Package[apt-transport-https]
+    require => Package['apt-transport-https', 'ca-certificates']
   }
 
   apache::module { passenger: config => true }
