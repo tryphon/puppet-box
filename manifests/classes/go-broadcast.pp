@@ -3,7 +3,7 @@ class go-broadcast {
   include apt::multimedia # required for lame
 
   package { "go-broadcast":
-    ensure => "0.11+build99",
+    ensure => "0.11+build101",
     require => [Apt::Source[tryphon-dev], Apt::Source[debian-multimedia]]
   }
   include go-broadcast::munin
