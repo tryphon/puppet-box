@@ -1,4 +1,4 @@
-class mysql::server {
+class mysql::server($storage_name) {
   # FIXME workaround to ignore user creation problem
   file { "/usr/local/bin/ypwhich":
     ensure => "/bin/true",
@@ -22,7 +22,7 @@ class mysql::server {
   }
 
   file { "/var/lib/mysql":
-    ensure => "/srv/$box_storage_name/mysql",
+    ensure => "/srv/$storage_name/mysql",
     force => true,
     require => Package[mysql-server]
   }
@@ -44,7 +44,7 @@ class mysql::server {
   file { "/etc/mysql/debian.cnf":
     ensure => link,
     force => true,
-    target => "/srv/$box_storage_name/mysql/debian.cnf",
+    target => "/srv/$storage_name/mysql/debian.cnf",
     require => Package["mysql-server"]
   }
 

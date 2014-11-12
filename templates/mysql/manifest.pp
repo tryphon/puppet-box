@@ -5,7 +5,7 @@ file { $mysql_real_directory:
   owner => mysql,
   group => mysql,
   mode => 700,
-  require => Exec["storage-mount-<%= box_storage_name %>"],
+  require => Exec["storage-mount-<%= storage_name %>"],
   tag => boot
 }
 
