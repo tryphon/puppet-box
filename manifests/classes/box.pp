@@ -101,20 +101,20 @@ class box::audio {
   include alsa::mixer
 }
 
-class box::storage {
+class box::storage($storage_name, $warning_threshold = "10%", $critical_threshold = "5%") {
   include mdadm
   include storage-utils
 
   # TODO completed with PigeBox/StageBox/ChouetteBox
 
-  file { "/srv/$box_storage_name":
+  file { "/srv/$storage_name":
     ensure => directory
   }
 
-  mount { "/srv/$box_storage_name":
+  mount { "/srv/$storage_name":
     ensure => defined,
     fstype => "ext3",
-    device => "LABEL=$box_storage_name",
+    device => "LABEL=$storage_name",
     options => "defaults"
   }
 
@@ -123,7 +123,7 @@ class box::storage {
     mode => 755
   }
 
-  file { "/etc/puppet/manifests/classes/storage-${box_storage_name}.pp":
+  file { "/etc/puppet/manifests/classes/storage-${storage_name}.pp":
     content => template("box/storage/manifest.pp")
   }
 
@@ -132,8 +132,8 @@ class box::storage {
   }
 
   # Must be load after storage.rb, so 'storage9-...'' isn't a typo
-  steto::conf { "storage9-$box_storage_name":
-    content => "StorageCheck.new(:$box_storage_name).config(Steto.config)\n"
+  steto::conf { "storage9-$storage_name":
+    content => "StorageCheck.new(:$storage_name, :warning_threshold => '$warning_threshold', :critical_threshold => '$critical_threshold').config(Steto.config)\n"
   }
 }
 

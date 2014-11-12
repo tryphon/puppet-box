@@ -24,6 +24,7 @@ class pige::base($web_application = "pigecontrol") {
   include pige::go-broadcast
   include pige::gem
   include pige::cron
+  include pige::storage
 }
 
 class pige::go-broadcast {
@@ -75,5 +76,13 @@ class pige::cron {
     # File found in 664 with this message from cron :
     # INSECURE MODE (group/other writable) (/etc/cron.d/pige)
     mode => 644
+  }
+}
+
+class pige::storage {
+  class { 'box::storage':
+    storage_name => "pige",
+    warning_threshold => 4096,
+    critical_threshold => 2048,
   }
 }
