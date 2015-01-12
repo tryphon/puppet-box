@@ -30,7 +30,7 @@ class box {
   include steto::apache
   include munin::all
 
-  include ntp::readonly
+  include ntp
 
   include lshw
   include hal
