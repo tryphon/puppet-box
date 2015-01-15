@@ -20,5 +20,10 @@ class ntp {
     source => 'puppet:///box/ntp/steto.rb'
   }
 
+  file { '/usr/lib/nagios/plugins/check_ntpd':
+    source => 'puppet:///box/ntp/check_ntpd.pl',
+    mode => 755
+  }
+
   readonly::mount_tmpfs { '/var/lib/ntp': }
 }
