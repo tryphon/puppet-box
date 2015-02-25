@@ -1,4 +1,6 @@
 class ntp {
+  include nagios::plugins
+
   package { ntp: }
 
   file { '/etc/ntp.conf':
@@ -23,7 +25,7 @@ class ntp {
   file { '/usr/lib/nagios/plugins/check_ntpd':
     source => 'puppet:///box/ntp/check_ntpd.pl',
     mode => 755,
-    require => Package['nagios-plugins-common']
+    require => Package['nagios-plugins-basic']
   }
 
   readonly::mount_tmpfs { '/var/lib/ntp': }
