@@ -22,7 +22,8 @@ class ntp {
 
   file { '/usr/lib/nagios/plugins/check_ntpd':
     source => 'puppet:///box/ntp/check_ntpd.pl',
-    mode => 755
+    mode => 755,
+    require => Package['nagios-plugins-common']
   }
 
   readonly::mount_tmpfs { '/var/lib/ntp': }
