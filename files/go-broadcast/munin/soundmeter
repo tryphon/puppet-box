@@ -12,7 +12,7 @@ class SoundMeterPlugin < Munin::Plugin
 
     @@graph_options[:info] = "This graph shows audio levels"
     @@graph_options[:vlabel] = "dBFS"
-    @@graph_options[:args] = "--lower-limit -100 --upper-limit 0"
+    @@graph_options[:args] = "--lower-limit -40 --upper-limit 0"
     @@graph_options[:scale] = "no"
   end
 
