@@ -67,7 +67,9 @@ class Storage
   def check
     if File.exists?("/dev/disk/by-label/#{@label}")
       log "Disk with label #{@label} exists"
-      check_raid1
+      check_raid1 if raid_exists?
+
+      true
     else
       create
     end
@@ -106,25 +108,53 @@ class Storage
     end
   end
 
+  def current_raid_devices
+    @current_raid_devices ||= Dir["/dev/md[0-9]*"]
+  end
+
+  def current_raid_device
+    @current_raid_device ||= current_raid_devices.first
+  end
+
+  def current_raid_name
+    @current_raid_name ||=
+      if current_raid_device =~ %r{^/dev/md([0-9]+)$}
+        "md#{$1}"
+      end
+  end
+
+  def raid_exists?
+    ! current_raid_devices.empty?
+  end
+
   def check_raid1
-    return true unless raid_degraded?
+    if current_raid_devices.empty?
+      log "No RAID array is configured"
+      return
+    end
+    if current_raid_devices.size > 1
+      log "Several RAID arrays are configured"
+      return
+    end
+
+    return unless raid_degraded?
 
     disk_device = blank_disks.first
     unless disk_device
       log "Raid is degraded and no blank disk is available"
-      return true
+      return
     end
 
-    log "Insert #{disk_device} into raid storage"
+    log "Insert #{disk_device} into raid storage #{current_raid_name}"
 
     execute do |c|
       partition = c.create_partition disk_device, "fd"
-      c.push "mdadm --manage /dev/md0 --add #{partition}"
+      c.push "mdadm --manage #{current_raid_device} --add #{partition}"
     end
   end
 
   def raid_degraded?
-    degraded_sys_file = "/sys/devices/virtual/block/md0/md/degraded"
+    degraded_sys_file = "/sys/devices/virtual/block/#{current_raid_name}/md/degraded"
     File.exists?(degraded_sys_file) and IO.read(degraded_sys_file).to_i == 1
   end
 
