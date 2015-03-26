@@ -1,59 +1,14 @@
 #!/bin/bash
 
 options="--logdest syslog"
-if [ "$1" = "boot" ]; then
-    # Save sterr/stdout
-    exec 5>&1 6>&2
-
-    exec > /var/log/launch-puppet-boot.log 2>&1
-
-    export PUPPET_BOOT=true
+if [ "$PUPPET_BOOT" = "true" ]; then
     options="--logdest console --tags boot --color false"
-
-    if [  ! -f "/var/etc/puppet/manifests/config.pp" ]; then
-        mkdir -p "/var/etc/puppet/manifests"
-        echo "Restore stored configuration"
-
-        cp "/boot/config.pp" "/var/etc/puppet/manifests/config.pp"
-
-        specific_config="/boot/config.pp.`facter macaddress`"
-        if [ -f "$specific_config" ]; then
-          echo "Use specific configuration ($specific_config)"
-          echo >> "/var/etc/puppet/manifests/config.pp"
-          cat "$specific_config" >> "/var/etc/puppet/manifests/config.pp"
-        fi
-
-        chown www-data "/var/etc/puppet/manifests/config.pp"
-    fi
-
-    echo "Migrate configuration (if needed)"
-    /usr/local/bin/box config migrate
 fi
 
 /usr/bin/puppet apply $options /etc/puppet/manifests/site.pp
 puppet_error_level=$?
 
-if [ "$1" = "boot" ]; then
-    exec 1>&5 5>&-       # Restore stout.
-    exec 2>&6 6>&-       # Restore sterr.
-
-    if [ $puppet_error_level != 0 ] || grep -q "err:" /var/log/launch-puppet-boot.log; then
-        echo ""
-        echo "Errors during puppet configuration :"
-        grep "err:" /var/log/launch-puppet-boot.log
-
-        echo -n "Press d to open a shell, c to continue [C/d] :"
-        read -t 10
-
-        if [ "$REPLY" = "d" ]; then
-            bash -i
-        else
-            exit 1
-        fi
-    fi
-else
-    if [ $puppet_error_level != 0 ]; then
-        echo "Errors during puppet configuration, check syslog"
-        # exit $puppet_error_level
-    fi
+if [ $puppet_error_level != 0 ]; then
+    echo "Errors during puppet configuration, check syslog"
+    exit $puppet_error_level
 fi

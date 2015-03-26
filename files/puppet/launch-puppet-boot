@@ -1,0 +1,27 @@
+# Save sterr/stdout
+exec 5>&1 6>&2
+exec > /var/log/launch-puppet-boot.log 2>&1
+
+export PUPPET_BOOT=true
+/usr/local/bin/box config restore
+
+/usr/local/sbin/launch-puppet
+puppet_error_level=$?
+
+exec 1>&5 5>&-       # Restore stout.
+exec 2>&6 6>&-       # Restore sterr.
+
+if [ $puppet_error_level != 0 ] || grep -q "err:" /var/log/launch-puppet-boot.log; then
+    echo ""
+    echo "Errors during puppet configuration :"
+    grep "err:" /var/log/launch-puppet-boot.log
+
+    echo -n "Press d to open a shell, c to continue [C/d] :"
+    read -t 10
+
+    if [ "$REPLY" = "d" ]; then
+        bash -i
+    else
+        exit 1
+    fi
+fi

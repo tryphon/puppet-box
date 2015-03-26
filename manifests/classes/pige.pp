@@ -29,13 +29,6 @@ class pige::base($web_application = "pigecontrol") {
 
 class pige::go-broadcast {
   include ::go-broadcast
-
-  file { "/etc/puppet/templates/go-broadcast.default":
-    source => ['puppet:///files/pige/go-broadcast.default.erb', 'puppet:///box/pige/go-broadcast.default.erb']
-  }
-  file { "/etc/default/go-broadcast":
-    ensure => "/var/etc/default/go-broadcast"
-  }
 }
 
 class pige::gem {

@@ -9,7 +9,7 @@
 ### END INIT INFO
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-SCRIPT=/usr/local/sbin/launch-puppet
+SCRIPT=/usr/local/sbin/launch-puppet-boot
 SCRIPT_OPTS=""
 NAME=puppet
 DESC="puppet configuration"
@@ -19,7 +19,7 @@ test -x $DAEMON || exit 0
 . /lib/lsb/init-functions
 
 launch_puppet() {
-  $SCRIPT $SCRIPT_OPTS boot
+  $SCRIPT $SCRIPT_OPTS
 }
 
 case "$1" in

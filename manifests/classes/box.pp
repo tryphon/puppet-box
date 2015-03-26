@@ -51,8 +51,8 @@ define box::config::migration($source) {
 class box::gem {
   file { "/etc/box": ensure => directory }
 
-  ruby::gem { 'tryphon-box': ensure => "1.01" }
-  ruby::gem { SyslogLogger: ensure => "2.0" }
+  ruby::gem { 'tryphon-box': ensure => '1.03' }
+  ruby::gem { 'SyslogLogger': ensure => '2.0' }
 
   file { "/etc/cron.d/box":
     content => "*/5 *    * * *   root	/usr/local/bin/random-sleep 50 5 && /usr/local/bin/box provisioning sync\n",
@@ -62,6 +62,10 @@ class box::gem {
   file { "/etc/box/registration_secret":
     content => $box_secret,
     mode => 600
+  }
+
+  sudo::line { "www-data-box-sudo":
+    line => "www-data	ALL=(root) NOPASSWD: /usr/local/bin/box sudo *"
   }
 }
 
@@ -80,8 +84,9 @@ class box::conf {
     ensure => directory
   }
 
-  file { "/etc/box/local.d/fix-config-deploy":
-    content => "Box::PuppetConfiguration.system_update_command = Box::PuppetConfiguration.deploy_command\n"
+  file { '/etc/box/local.d/box-executable':
+    # we don't want to use /var/lib/gems/x.y.z/gems/tryphon-box-x.y.z/bin/box
+    content => "Box.executable = '/usr/local/bin/box'\n"
   }
 
   # Contains customized config at runtime

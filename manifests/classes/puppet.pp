@@ -59,6 +59,10 @@ class puppet {
     source => "puppet:///box/puppet/launch-puppet",
     mode => 755
   }
+  file { "/usr/local/sbin/launch-puppet-boot":
+    source => "puppet:///box/puppet/launch-puppet-boot",
+    mode => 755
+  }
   file { "/usr/local/sbin/save-puppet-config":
     source => "puppet:///box/puppet/save-puppet-config",
     mode => 755
@@ -72,7 +76,6 @@ class puppet {
   sudo::line { "www-data-save-puppet-config":
     line => "www-data	ALL=(root) NOPASSWD: /usr/local/sbin/save-puppet-config"
   }
-
 }
 
 class puppet::download-config {

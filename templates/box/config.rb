@@ -5,12 +5,12 @@ unless ENV["PUPPET_BOOT"]
 end
 
 local_files = Dir["/etc/box/local.d/*"]
-local_files << "/etc/box/local.rb"
+local_files << "/etc/box/local.rb" if File.readable? "/etc/box/local.rb"
 
-local_files.each do |local_file| 
+local_files.each do |local_file|
   begin
     load local_file
-  rescue Error => e
+  rescue Exception => e
     Box.logger.error "Can't load local file #{local_file}: #{e}"
   end
 end
