@@ -19,7 +19,7 @@ gem "puppet-lint"
 group :cucumber do
   gem 'capybara'
   gem 'cucumber'
-  gem 'capybara-mechanize', :git => "git://github.com/albanpeignier/capybara-mechanize.git"
+  gem 'poltergeist'
   gem "rspec"
   gem "net-ssh"
   gem 'sshkey'
