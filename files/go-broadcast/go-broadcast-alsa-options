@@ -1,0 +1,14 @@
+#!/bin/bash
+
+device=$1
+device_id=$2
+
+alsa_options="--alsa-device=$device"
+
+case $device_id in
+    M2496)
+        alsa_options="$alsa_options --alsa-channels=12 --alsa-remix=1:2"
+        ;;
+esac
+
+echo -n $alsa_options

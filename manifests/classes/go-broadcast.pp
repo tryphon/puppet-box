@@ -20,6 +20,11 @@ class go-broadcast {
     source => ['puppet:///files/go-broadcast/go-broadcast.default.erb', 'puppet:///box/go-broadcast/go-broadcast.default.erb']
   }
 
+  file { '/usr/local/bin/go-broadcast-alsa-options':
+    source => 'puppet:///box/go-broadcast/go-broadcast-alsa-options',
+    mode => 755
+  }
+
   include go-broadcast::munin
 }
 
