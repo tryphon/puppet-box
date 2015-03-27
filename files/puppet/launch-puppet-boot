@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Save sterr/stdout
 exec 5>&1 6>&2
 exec > /var/log/launch-puppet-boot.log 2>&1
