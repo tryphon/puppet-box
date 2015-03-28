@@ -24,3 +24,9 @@ Feature: Manage ssh access
     And the box configuration is saved
     When the box reboots
     Then I can open an ssh session with boxuser
+
+  Scenario: Remove all SSH keys
+    Given I create an ssh key
+    And I register this ssh key in authorized keys
+    When I unregister all ssh keys
+    Then I can't open an ssh session with boxuser

@@ -14,4 +14,8 @@ if $ssh_authorized_keys {
     tag => boot,
     require => Exec["boxuser-rsync-home"]
   }
+} else {
+  file { '/home/boxuser/.ssh/authorized_keys':
+    ensure => absent
+  }
 }
