@@ -35,6 +35,10 @@ class go-broadcast::config {
   file { "/etc/go-broadcast":
     ensure => "/var/etc/go-broadcast"
   }
+
+  box::config::migration { '20150401085239_create_go_broadcast_streams':
+    source => 'puppet:///box/go-broadcast/migrations/20150401085239_create_go_broadcast_streams.rb'
+  }
 }
 
 class go-broadcast::munin {

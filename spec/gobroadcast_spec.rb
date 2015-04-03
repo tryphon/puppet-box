@@ -19,6 +19,7 @@ describe "GoBroadcast" do
 
     it "should create GoBroadcast streams configuration with stream_... attributes" do
       config[:stream_1_id]="1"
+      config[:stream_1_server_type]="icecast2"
       config[:stream_1_server]="stream-in.tryphon.eu"
       config[:stream_1_port]="8000"
       config[:stream_1_mount_point]="streambox.ogg"
@@ -32,12 +33,19 @@ describe "GoBroadcast" do
       gobroadcast_config["Http"]["Streams"][0]["Identifier"].should == "1"
       gobroadcast_config["Http"]["Streams"][0]["Target"].should == "http://source:secret@stream-in.tryphon.eu:8000/streambox.ogg"
       gobroadcast_config["Http"]["Streams"][0]["Format"].should == "ogg/vorbis:vbr(q=4)"
+      gobroadcast_config["Http"]["Streams"][0]["ServerType"].should == "icecast2"
     end
 
     describe "#create_stream" do
 
       it "should use id as Identifier" do
         migration.create_stream(id: "dummy")["Identifier"].should == "dummy"
+      end
+
+      it "should create ServerType from server_type" do
+        migration.create_stream(server_type: "icecast2")["ServerType"].should == "icecast2"
+        migration.create_stream(server_type: "shoutcast")["ServerType"].should == "shoutcast"
+        migration.create_stream(server_type: "local")["ServerType"].should == "icecast2"
       end
 
       it "should create Target from password, server, port, mount_point" do

@@ -5,6 +5,15 @@ Given /^the box configuration contains ([a-z_]+) = "([^"]*)"$/ do |key, value|
   end
 end
 
+Given /^the box configuration contains:$/ do |attributes|
+  current_box.configuration do |config|
+    attributes.rows_hash.each do |key, value|
+      config[key] = value.to_s
+    end
+    config.save
+  end
+end
+
 Given /^the box configuration doesn't contain ([a-z_]+)$/ do |key|
   current_box.configuration do |config|
     config.delete key

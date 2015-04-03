@@ -1,6 +1,6 @@
 class CreateGoBroadcastStreams < Box::Config::Migration
 
-  @@gobroadcast_config_file = "/boot/data/go-broadcast.json"
+  @@gobroadcast_config_file = "/var/etc/go-broadcast/config.json"
   cattr_accessor :gobroadcast_config_file
 
   def gobroadcast_config
@@ -19,7 +19,13 @@ class CreateGoBroadcastStreams < Box::Config::Migration
       end
     end
 
-    File.write gobroadcast_config_file, { "Http" => { "Streams" => gobroadcast_streams } }.to_json
+    unless gobroadcast_streams.empty?
+      saved_config = { "Http" => { "Streams" => gobroadcast_streams } }
+      Box.logger.info "Save new go-broadcast config : #{saved_config.inspect}"
+
+      FileUtils.mkdir_p File.dirname(gobroadcast_config_file)
+      File.write gobroadcast_config_file, saved_config.to_json
+    end
   end
 
   def create_stream(attributes = {})
@@ -38,7 +44,8 @@ class CreateGoBroadcastStreams < Box::Config::Migration
     {
       "Identifier" => attributes[:id],
       "Target" => "http://source:#{attributes[:password]}@#{attributes[:server]}:#{attributes[:port]}/#{attributes[:mount_point]}",
-      "Format" => format
+      "Format" => format,
+      "ServerType" => (attributes[:server_type] == "shoutcast" ? "shoutcast" : "icecast2")
     }.tap do |stream|
       description = {
         "Name" => attributes[:name],

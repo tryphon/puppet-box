@@ -27,24 +27,40 @@ def save_box_syslog
   end
 end
 
+class Cucumber::Ast::OutlineTable::ExampleRow
+
+  def last?
+    index == (@table.cells_rows.size - 1)
+  end
+
+  def no_rollback?
+    source_tag_names.include?("@example-without-rollback") && ! last?
+  end
+
+end
+
 After do |scenario|
   save_box_syslog if scenario.failed?
 
-  @before_rollback_callbacks.each do |hook|
-    hook.call scenario
-  end if @before_rollback_callbacks
+  no_rollback = scenario.respond_to?(:no_rollback) ? scenario.no_rollback : false
 
-  retry_count = 0
-  begin
-    current_box.rollback
-  rescue Timeout::Error => e
-    retry_count += 1
-    VMBox.logger.error "Rollback failed : #{e}"
-    if retry_count < 10
-      retry
-    else
-      VMBox.logger.error "Stop tests"
-      Cucumber.wants_to_quit = true
+  unless no_rollback
+    @before_rollback_callbacks.each do |hook|
+      hook.call scenario
+    end if @before_rollback_callbacks
+
+    retry_count = 0
+    begin
+      current_box.rollback
+    rescue Timeout::Error => e
+      retry_count += 1
+      VMBox.logger.error "Rollback failed : #{e}"
+      if retry_count < 10
+        retry
+      else
+        VMBox.logger.error "Stop tests"
+        Cucumber.wants_to_quit = true
+      end
     end
   end
 end
