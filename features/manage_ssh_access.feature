@@ -7,16 +7,12 @@ Feature: Manage ssh access
     When I am on /ssh
     Then I should see "No authorized keys"
 
-  Scenario: Default SSH Configuration is empty
+  Scenario: Add an SSH key
     Given I create a ssh key
     And I register this ssh key in authorized keys
     When I am on /ssh
     Then I should see "1 Authorized key"
-
-  Scenario: Add an SSH key
-    Given I create a ssh key
-    When I register this ssh key in authorized keys
-    Then I can open a ssh session with boxuser
+    And I can open a ssh session with boxuser
 
   Scenario: SSH key are restored after reboot
     Given I create a ssh key
