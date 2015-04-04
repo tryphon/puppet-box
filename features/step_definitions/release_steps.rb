@@ -11,7 +11,7 @@ end
 Then /the release should be downloading/ do
   expect(page).to have_content("Download pending since")
 
-  time_to_wait = 1800
+  time_to_wait = 3600
   pause_duration = 60
 
   download_rate = 0
