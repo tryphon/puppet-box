@@ -65,6 +65,11 @@ class network::ifplugd {
   file { "/etc/default/ifplugd":
     source => "puppet:///box/network/ifplugd.default",
   }
+  # ifup/down all vlan interfaces
+  file { "/etc/ifplugd/action.d/ifupdown-vlans":
+    source => "puppet:///box/network/ifplugd-action-vlans",
+    mode => 755
+  }
 }
 
 class network::resolvconf {
