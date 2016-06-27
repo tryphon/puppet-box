@@ -1,6 +1,6 @@
 class alsa {
   $device = generate("/usr/local/bin/alsa-device")
-  $device_id = inline_template("<%= (File.read('/proc/asound/card0/id') rescue "").chomp.gsub(/HDSPMx\d+/, 'HDSPM') %>")
+  $device_id = inline_template("<%= (File.read('/proc/asound/card0/id') rescue '').chomp.gsub(/HDSPMx[0-9]+/, 'HDSPM') %>")
 
   # OPTIMIZEME specific to RivendellBoxes (see #1087)
   if $alsa_config == "" and $alsa::device_id == "DSP" {
